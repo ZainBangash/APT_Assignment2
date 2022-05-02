@@ -10,6 +10,8 @@ typedef int Value;
 
 class Tile {
 public:
+   Tile(Letter* letter, Value* value);
+
    Letter letter;
    Value  value;
 };
