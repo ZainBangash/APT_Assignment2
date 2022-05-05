@@ -40,3 +40,37 @@ Tile* LinkedList::get(int index){
     }
     return retTile;
 }
+
+void LinkedList::add_front(Tile* data){
+   if (head == nullptr)
+   {
+      head = data;
+   }
+   else
+   {
+  // Make the new node point to the (old) head.
+      data->next = head;
+
+  // Make the head pointer point to the new node.
+      head = new_node;
+   }
+    
+}
+void LinkedList::add_back(Tile* data){
+    
+}
+
+void LinkedList::remove_front(){
+    
+}
+void LinkedList::remove_back(){
+    
+}
+
+void LinkedList::remove(int index){
+    
+}
+
+void LinkedList::clear(){
+    
+}
