@@ -14,6 +14,18 @@ public:
 
    Tile* get(int index);
 
+   void add_front(Tile* data);
+
+   void add_back(Tile* data);
+
+   void remove_front();
+
+   void remove_back();
+
+   void remove(int index);
+
+   void clear();
+
 private:
    Node* head;
 };
