@@ -23,9 +23,9 @@ int main(void) {
     //delete list;
     //std::cout.flush();
     //mainMenu();
-   Board* b = new Board();
+   Board b = Board();
 
-   delete b;
+   //delete b;
 
    return EXIT_SUCCESS;
 }

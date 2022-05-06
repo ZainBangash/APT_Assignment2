@@ -4,19 +4,25 @@
 #define BOARD_SIZE 15
 
 #include <vector>
+#include <iostream>
 
 #include "Tile.h"
 
 using std::vector;
+
+using std::cout;
+using std::endl;
 
 class Board {
 public:
     Board();
     ~Board();
 
-    Tile* getTile(int x, int y);
+    //bool tileExists(int x, int y);
 
-    void setTile(int x, int y, Tile*);
+    //Tile* getTile(int x, int y);
+
+    //void setTile(int x, int y, Tile*);
 
     void printBoard();
 
