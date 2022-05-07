@@ -12,6 +12,8 @@ using std::vector;
 
 class Player {
     public:
+        Player();
+        ~Player();
         bool validate(vector<PlacedTile> tilesPlaced);
         bool hasTile(Letter l);
 
@@ -23,6 +25,7 @@ class Player {
 };
 
 
+// also for validation
 enum WordDirection {
     Horizontal,
     Vertical

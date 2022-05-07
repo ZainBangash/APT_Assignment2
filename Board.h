@@ -18,11 +18,11 @@ public:
     Board();
     ~Board();
 
-    //bool tileExists(int x, int y);
+    bool tileExists(int x, int y);
 
-    //Tile* getTile(int x, int y);
+    Tile* getTile(int x, int y);
 
-    //void setTile(int x, int y, Tile*);
+    void setTile(int x, int y, Tile*);
 
     void printBoard();
 

@@ -23,9 +23,12 @@ int main(void) {
     //delete list;
     //std::cout.flush();
     //mainMenu();
-   Board b = Board();
+    Board b = Board();
 
-   //delete b;
+    b.setTile(0, 5, new Tile('Z', 10));
+    b.printBoard();
+
+    //delete b;
 
    return EXIT_SUCCESS;
 }

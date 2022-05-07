@@ -3,26 +3,39 @@
 
 Board::Board() {
     // initialize board size
-    // DOESNT WORK, BECOMES LOCAL FOR SOME STUPID REASON
-    // WHY DOES HEADDER FILE DO INITIALIZATION!!!!
-    //vector<vector<Tile*>> board( BOARD_SIZE , vector<Tile*> (BOARD_SIZE, nullptr));
-    //board.resize(BOARD_SIZE);
-    //for (vector<Tile*> i : board) {i.resize(BOARD_SIZE);}
     board.resize(BOARD_SIZE);
     for (int i = 0; i < BOARD_SIZE; i++) {
         board[i].resize(BOARD_SIZE);
     }
 
-    board[4][4] = new Tile('Z', 10);
-
-    printBoard();
-
-
 }
+
 
 Board::~Board() {
     // it is probably the board class's job to clean up tiles placed down
+    for (int row = 0; row < BOARD_SIZE; row++) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            if (tileExists(col, row)) {
+                delete board[row][col];
+            }
+        }
+    }
 
+}
+
+
+bool Board::tileExists(int x, int y) {
+    return board[y][x] != nullptr;
+}
+
+
+Tile* Board::getTile(int x, int y) {
+    return board[y][x];
+}
+
+
+void Board::setTile(int x, int y, Tile* tile) {
+    board[y][x] = tile;
 }
 
 
@@ -49,23 +62,21 @@ void Board::printBoard() {
 
     char lineLetter;
     // Print each line
-    for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int row = 0; row < BOARD_SIZE; row++) {
         // Print line letter
-        lineLetter = 'A' + i;
+        lineLetter = 'A' + row;
         cout << " " << lineLetter << " |";
 
         // Print tiles
-        for (int j = 0; j < BOARD_SIZE; j++) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
 
-            if (board[i][j] == nullptr) {
-                cout << "   |";
+            if (tileExists(col, row)) {
+                cout << " " << getTile(col, row)->letter << " |";
             } else {
-                cout << " " << board[i][j]->letter << " |";
+                cout << "   |";
             }
         }
         cout << endl;
     }
-
-
 
 }
