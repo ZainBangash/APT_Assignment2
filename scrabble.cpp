@@ -1,4 +1,7 @@
+
 //#include "LinkedList.h"
+#include "Board.h"
+#include "Player.h"
 
 #include <iostream>
 #include <vector>
@@ -10,23 +13,35 @@
 #define EXIT_SUCCESS    0
 
 void mainMenu();
-bool addPlayers(std::vector<std::string> playerNames, std::string player);
-bool checkCommand(std::string command);
+void playGame(std::vector<Player*> playerNames);
+std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string player);
+Board checkCommand(std::string command, Board board);
 bool checkName(std::string name);
 bool fileExists(std::string fileName);
+int changeCharToInt(char charToChange);
 
 int main(void) {
   // LinkedList* list = new LinkedList();
    //delete list;
-   std::cout.flush();   
-   mainMenu();
+   std::string command;
+   Board board = Board();
+   board.printBoard();
+   while(true){
+      std::cout<<"Enter command: ";
+      getline(std::cin, command);
+      board = checkCommand(command, board);
+      board.printBoard();
+   }
+   
+
+   //std::cout.flush();   
+   //mainMenu();
    return EXIT_SUCCESS;
 }
 
 void mainMenu(){
    int menuSelection;
    while (true){
-      static std::vector<std::string> playerNames;
       std::cout << "Welcome To Scrabble!" << std::endl;
       std::cout << "-------------------" << std::endl;
       std::cout << "Menu" << std::endl;
@@ -38,17 +53,21 @@ void mainMenu(){
       std::cin >> menuSelection;
       if(!std::cin.eof()){
          if(menuSelection == 1){ //play game option
-            
+            std::vector<Player*> playerNames;
+            //playerNames.resize(2);            
             std::cout << std::endl;
             std::cout << "Starting a New Game" << std::endl;
             std::cout<<std::endl;
             std::string message;
             getline(std::cin, message);
-            addPlayers(playerNames, std::to_string(1));
+            playerNames = addPlayers(playerNames, "1");
             std::cin.clear(); //allows for multiple inputs
             std::cin.sync();
-            addPlayers(playerNames, "2");
+            playerNames = addPlayers(playerNames, "2");
             std::cout << std::endl;
+            std::cout << "Player 1: " << playerNames[0]->getName() << ", " << playerNames[0]->getPoints() << std::endl;
+            std::cout << "Player 2: " << playerNames[1]->getName() << ", " << playerNames[1]->getPoints() << std::endl;
+            std::cout << std::endl;            
             std::cout << "Lets Play!" << std::endl;
             std::cout << std::endl;
          }else if(menuSelection == 2){ //load game option
@@ -94,25 +113,29 @@ void mainMenu(){
    }
 }
 
-bool addPlayers(std::vector<std::string> playerNames, std::string player){ //adds Player names
-   bool validPlayer = true;
-   std::cin.clear(); //allows for multiple inputs
-   std::cin.sync();
-   std::cout << "Enter a name for player "<<  player <<" (uppercase characters only)" << std::endl;
-   std::string name1;
-   getline(std::cin, name1);  //player 1 name input
-   if(checkName(name1)==true){
-      playerNames.push_back(name1); //add player 1 name to playerNames vector
+void playGame(std::vector<Player*> playerNames){
+   Board board = Board();
+   board.printBoard();
+   
+   
+}
+
+
+std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string player){ //adds Player names
+   bool validPlayer = false;
+   while (validPlayer == false){
+      std::cin.clear(); //allows for multiple inputs
+      std::cin.sync();
+      std::cout << "Enter a name for player "<<  player <<" (uppercase characters only)" << std::endl;
+      std::string name;
+      getline(std::cin, name);  //player 1 name input
+      if(checkName(name)==true){
+         validPlayer = true;
+         playerNames.push_back(new Player(name, 0)); //add player 1 name to playerNames vector
+      }
+      std::cout << std::endl;
    }
-   std::cout << std::endl;
-   // std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
-   // std::string name2;
-   // getline(std::cin, name2); // player 2 name input
-   // checkName(name2);
-   // if(checkName(name2)==true){
-   //    playerNames.push_back(name2); // add player 2 name to playerNames vector
-   // } 
-   return validPlayer;
+   return playerNames;
 }
 
 
@@ -140,35 +163,96 @@ bool checkName(std::string name){ //validates names
 	
     if (validName == false){ //if name is false then prints the following message
         std::cout << "invalid name, name should be uppercase and contain only letters" << std::endl;
+        std::cout<<std::endl;
     }
     return validName;
 }
 
-bool checkCommand(std::string command){ //validates command
+int changeCharToInt(char charToChange){
+   if(charToChange == 'A'){
+      return 0;
+   }else if(charToChange == 'B'){
+      return 1;
+   }else if(charToChange == 'C'){
+      return 2;
+   }else if(charToChange == 'D'){
+      return 3;
+   }else if(charToChange == 'E'){
+      return 4;
+   }else if(charToChange == 'F'){
+      return 5;
+   }else if(charToChange == 'G'){
+      return 6;
+   }else if(charToChange == 'H'){
+      return 7;
+   }else if(charToChange == 'I'){
+      return 8;
+   }else if(charToChange == 'J'){
+      return 9;
+   }else if(charToChange == 'K'){
+      return 10;
+   }else if(charToChange == 'L'){
+     return 11;
+   }else if(charToChange == 'M'){
+      return 12;
+   }else if(charToChange == 'N'){
+      return 13;
+   }else if(charToChange == 'O'){
+      return 14;
+   }else{
+      return 0;
+   }
+}
+
+
+Board checkCommand(std::string command, Board board){ //validates command
    //bool validCommand = true;
    std::string inter;
    std::vector<std::string> tokens;
-   //getline(std::cin, command);
    std::stringstream check1(command);
-   //hardcode rows and columns
-   //getline find out
    while(getline(check1, inter, ' ')){ //tokenizes command string
       tokens.push_back(inter);
    }
    if(tokens[0]=="place"){ //if first word is place
-      std::string rows = "ABCDEF";
+      std::string rows = "ABCDEFGHIJKLMNO";
       //check if tile is in hand
+      
       if(tokens[2]!="at"){
          //validCommand = false;
          std::cout<<"Place command error at 'at' "<<std::endl;
-      }if((rows.find(tokens[3].at(0)) != std::string::npos)){
-         std::cout << "Row valid" << std::endl;
-         if(tokens[3].at(1) == '0' ||tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'){
-            std::cout << " Column valid" << std::endl;
-         }
       }else{
-         std::cout << "Place command error at grid coordinates" << std::endl;
-
+         if((rows.find(tokens[3].at(0)) != std::string::npos)){
+            if(tokens[3].size() == 2){
+               if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
+                  std::string column;
+                  column.push_back(tokens[3].at(1));
+                  int columnInt = std::stoi(column)-1;
+                  int rowInt = changeCharToInt(tokens[3].at(0));
+                  //delete
+                  Tile* tile = new Tile(tokens[1].at(0), 0);
+                  //delete
+                  board.setTile(tile, rowInt, columnInt);
+               }
+            }else if(tokens[3].size() == 3){
+               if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
+                  std::string column;
+                  column.push_back(tokens[3].at(1));
+                  column.push_back(tokens[3].at(2));
+                  int columnInt = std::stoi(column)-1;
+                  int rowInt = changeCharToInt(tokens[3].at(0));
+                  //delete
+                  Tile* tile = new Tile(tokens[1].at(0), 0);
+                  //delete
+                  board.setTile(tile, rowInt, columnInt);
+               }
+            }else{
+               //validCommand = false;
+               std::cout << "Place command error at grid coordinates" << std::endl;
+            }
+         }else{
+            //validCommand = false;
+            std::cout << "Place command error at grid coordinates" << std::endl;
+         }
       }
    }else if(tokens[0]=="replace"){ // if first word is replace
       std::string alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -194,7 +278,7 @@ bool checkCommand(std::string command){ //validates command
    }else{
       std::cout << "Invalid Command" << std::endl;
    }
-   return true;
+   return board;
 
 }
 
