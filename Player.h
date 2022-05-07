@@ -12,9 +12,10 @@ using std::vector;
 
 class Player {
     public:
-        Player();
+        Player(Board* board);
         ~Player();
         bool validate(vector<PlacedTile> tilesPlaced);
+        void addTileToHand(Tile* tile);
         bool hasTile(Letter l);
 
     private:

@@ -1,6 +1,7 @@
 //#include "LinkedList.h"
 #include "Board.h"
 #include "Tile.h"
+#include "Player.h"
 
 #include <iostream>
 #include <vector>
@@ -22,13 +23,17 @@ int main(void) {
     // LinkedList* list = new LinkedList();
     //delete list;
     //std::cout.flush();
-    //mainMenu();
-    Board b = Board();
+    mainMenu();
+    //Board b = Board();
 
-    b.setTile(0, 5, new Tile('Z', 10));
-    b.printBoard();
+    //b.setTile(0, 5, new Tile('Z', 10));
+    //b.printBoard();
 
     //delete b;
+
+    //Player p = Player(&b);
+    //p.addTileToHand(new Tile('Z', 10));
+    //cout << p.hasTile('Z') << endl;
 
    return EXIT_SUCCESS;
 }

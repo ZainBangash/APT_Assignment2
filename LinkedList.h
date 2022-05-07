@@ -4,6 +4,11 @@
 
 #include "Node.h"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 class LinkedList {
 public:
 
@@ -13,17 +18,11 @@ public:
    int size();
 
    Tile* get(int index);
-
-   void add_front(Tile* data);
-
-   void add_back(Tile* data);
-
+   void add_front(Tile* tile);
+   void add_back(Tile* tile);
    void remove_front();
-
    void remove_back();
-
    void remove(int index);
-
    void clear();
 
 private:
