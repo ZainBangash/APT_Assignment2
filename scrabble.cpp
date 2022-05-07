@@ -21,7 +21,7 @@ bool fileExists(std::string fileName);
 int changeCharToInt(char charToChange);
 
 int main(void) {
-  // LinkedList* list = new LinkedList();
+   //LinkedList* list = new LinkedList();
    //delete list;
    std::string command;
    Board board = Board();
