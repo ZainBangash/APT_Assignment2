@@ -1,10 +1,14 @@
 //#include "LinkedList.h"
+#include "Board.h"
+#include "Tile.h"
+#include "Player.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <bits/stdc++.h>
 #include <fstream>
+
 
 
 #define EXIT_SUCCESS    0
@@ -16,10 +20,21 @@ bool checkName(std::string name);
 bool fileExists(std::string fileName);
 
 int main(void) {
-  // LinkedList* list = new LinkedList();
-   //delete list;
-   std::cout.flush();   
-   mainMenu();
+    // LinkedList* list = new LinkedList();
+    //delete list;
+    //std::cout.flush();
+    mainMenu();
+    //Board b = Board();
+
+    //b.setTile(0, 5, new Tile('Z', 10));
+    //b.printBoard();
+
+    //delete b;
+
+    //Player p = Player(&b);
+    //p.addTileToHand(new Tile('Z', 10));
+    //cout << p.hasTile('Z') << endl;
+
    return EXIT_SUCCESS;
 }
 
@@ -38,7 +53,7 @@ void mainMenu(){
       std::cin >> menuSelection;
       if(!std::cin.eof()){
          if(menuSelection == 1){ //play game option
-            
+
             std::cout << std::endl;
             std::cout << "Starting a New Game" << std::endl;
             std::cout<<std::endl;
@@ -59,7 +74,7 @@ void mainMenu(){
             std::string fileName;
             getline(std::cin, fileName);// name of file
             fileExists(fileName); //checks if file exists
-            std::cout << std::endl;         
+            std::cout << std::endl;
          }else if(menuSelection == 3){ //prints name, id and email of group members
             std::cout << "----------------------------------" << std::endl;
             std::cout << "Name: Zain Haider Bangash" << std::endl;
@@ -111,7 +126,7 @@ bool addPlayers(std::vector<std::string> playerNames, std::string player){ //add
    // checkName(name2);
    // if(checkName(name2)==true){
    //    playerNames.push_back(name2); // add player 2 name to playerNames vector
-   // } 
+   // }
    return validPlayer;
 }
 
@@ -137,7 +152,7 @@ bool checkName(std::string name){ //validates names
             validName = false;
         }
 	}
-	
+
     if (validName == false){ //if name is false then prints the following message
         std::cout << "invalid name, name should be uppercase and contain only letters" << std::endl;
     }
@@ -172,7 +187,7 @@ bool checkCommand(std::string command){ //validates command
       }
    }else if(tokens[0]=="replace"){ // if first word is replace
       std::string alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      
+
       if(!alphabets.find(tokens[2])){//CHECK IF TILE IS IN HAND
          //validCommand = false;
       }else{
@@ -185,7 +200,7 @@ bool checkCommand(std::string command){ //validates command
       if(myfile) { //if file exists it overwrites file
          std::ofstream fileToOverWrite(tokens[1], std::ofstream::trunc);
          fileToOverWrite << "OverWriting Existing File";
-      }else{ //writes in file 
+      }else{ //writes in file
          std::ofstream fileToWrite(tokens[1]);
          fileToWrite << "Files can be tricky, but it is fun enough!";
          fileToWrite.close();
@@ -197,4 +212,3 @@ bool checkCommand(std::string command){ //validates command
    return true;
 
 }
-

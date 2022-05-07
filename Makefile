@@ -3,10 +3,10 @@
 all: scrabble
 
 clean:
-	rm -rf scrabble *.o *.dSYM
+	rm -rf scrabble.out *.o *.dSYM
 
-scrabble: Tile.o Node.o LinkedList.o scrabble.o
-	g++ -Wall -Werror -std=c++14 -g -O -o $@ $^
+scrabble: Tile.o Node.o LinkedList.o scrabble.o Board.o Player.o
+	g++ -Wall -Werror -std=c++14 -g -O -o $@.out $^
 
 %.o: %.cpp
 	g++ -Wall -Werror -std=c++14 -g -O -c $^
