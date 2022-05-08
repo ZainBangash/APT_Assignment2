@@ -25,40 +25,7 @@ bool validateTilePlacement(std::vector<PlacedTile> tilesPlaced, Board* board);
 int main(void) {
   // LinkedList* list = new LinkedList();
    //delete list;
-   //make vector to store tile to be placed
-                  //declare vector in a way that it doesnt get overwritten 
-                  //check validateTilePlacement
-                  //if valid place the most recent tile from the vector
-                  //use a pointer to the board
-   // Board board = Board();
-   // board.printBoard();
-   // std::vector<Player*> playerNames;
-   // playerNames = addPlayers(playerNames, "1");
-   // std::cin.clear(); //allows for multiple inputs
-   // std::cin.sync();
-   // playerNames = addPlayers(playerNames, "2");
-   // std::cout << std::endl;
-   // std::cout << "Player 1: " << playerNames[0]->getName() << ", " << playerNames[0]->getPoints() << std::endl;
-   // std::cout << "Player 2: " << playerNames[1]->getName() << ", " << playerNames[1]->getPoints() << std::endl;
-   // std::vector<PlacedTile> tilesPlaced; 
-   // int playerID = 0;
-   // while(true){
-   //    std::cout<<"Enter command: ";
-   //    getline(std::cin, command);
-   //    if (command == "pass"){
-   //       if(playerID == 0){
-   //          playerID = 1;
-   //       }else{
-   //          playerID = 0;
-   //       }
-   //    }else{
-   //       board = checkCommand(command, board, &tilesPlaced);
-   //       board.printBoard();
-   //    }
-   // }
    
-
-   //std::cout.flush();   
    mainMenu();
    return EXIT_SUCCESS;
 }
@@ -138,26 +105,26 @@ void mainMenu(){
    }
 }
 
-void playGame(std::vector<Player*> playerNames){
+void playGame(std::vector<Player*> playerNames){//scrabble
    std::string command;
    Board board = Board();
    board.printBoard();
-   std::vector<PlacedTile> tilesPlaced; 
+   std::vector<PlacedTile> tilesPlaced; //tiles placed by a player in a turn
    int playerID = 0;
    while(true){
       std::cout<<"Enter command: ";
       getline(std::cin, command);
-      if (command == "pass"){
-         if(playerID == 0){
+      if (command == "pass"){ //switches playerID 
+         if(playerID == 0){ 
             playerID = 1;
-            tilesPlaced.clear();
+            tilesPlaced.clear(); //empties vector
          }else{
             playerID = 0;
             tilesPlaced.clear();
          }
       }else{
-         board = checkCommand(command, board, &tilesPlaced);
-         board.printBoard();
+         board = checkCommand(command, board, &tilesPlaced); //validates command and acts accordingly
+         board.printBoard(); //prints board
       }
    }
    
@@ -211,7 +178,7 @@ bool checkName(std::string name){ //validates names
     return validName;
 }
 
-int changeCharToInt(char charToChange){
+int changeCharToInt(char charToChange){//change char to int for the row 
    if(charToChange == 'A'){
       return 0;
    }else if(charToChange == 'B'){
@@ -260,12 +227,12 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
       std::string rows = "ABCDEFGHIJKLMNO";
       //check if tile is in hand
       
-      if(tokens[2]!="at"){
+      if(tokens[2]!="at"){ // if second word isnt "at"
          //validCommand = false;
          std::cout<<"Place command error at 'at' "<<std::endl;
       }else{
-         if((rows.find(tokens[3].at(0)) != std::string::npos)){
-            if(tokens[3].size() == 2){
+         if((rows.find(tokens[3].at(0)) != std::string::npos)){ //if the row coordinate is valid
+            if(tokens[3].size() == 2){ // if column number is single digit
                if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
                   std::string column;
                   column.push_back(tokens[3].at(1));
@@ -279,16 +246,16 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
                   placeTile.x = columnInt;
                   placeTile.y = rowInt;
                   tilesPlaced->push_back(placeTile);
-                  if(validateTilePlacement(*tilesPlaced, &board)){
+                  if(validateTilePlacement(*tilesPlaced, &board)){//check if tile can be placed
                      board.setTile(tile, rowInt, columnInt);
-                     if(tilesPlaced->size() == 7){
-                        std::cout << "BINGO!" << std::endl;
+                     if(tilesPlaced->size() == 7){ //prints BINGO if user places 7 tiles
+                        std::cout << "BINGO!" << std::endl; 
                      }
                   }else{
-                     tilesPlaced->pop_back();
+                     tilesPlaced->pop_back(); //removes if validateTilePlacement fails
                   }
                }
-            }else if(tokens[3].size() == 3){
+            }else if(tokens[3].size() == 3){// if column number is single digit
                if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
                   //TODO 
 
