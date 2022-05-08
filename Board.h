@@ -1,24 +1,47 @@
-#ifndef ASSIGN2_BOARD_H
-#define ASSIGN2_BOARD_H
+#include "Board.h"
 
-#include <vector>
-#include <string>
+#include <iostream>
 
-#include "Tile.h"
+Board::Board() {
+    // Tile *tile = new Tile(' ', 0);
+    // // initialize board size
+    //  board.resize(BOARD_SIZE, std::vector<Tile*> (BOARD_SIZE, tile));
 
-#define BOARD_SIZE 15
+    board.resize(BOARD_SIZE);
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        board[i].resize(BOARD_SIZE);
+    }
+}
 
-class Board{
-public:
-    Board();
-    std::vector<std::vector<Tile*>> getBoard() const;
-    void setVector(std::vector<std::vector<Tile*>> board);
-    void printBoard();
-    Tile* getTile(int row, int col);
-    void setTile(Tile* tile, int row, int col);
+void Board::printBoard(){
+    std::vector<std::string> rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"}; // rows
+    std::cout<<"    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  " <<std::endl; //print column headers
+    std::cout<<"  ------------------------------------------------------------- " <<std::endl;    
+    int i = 0;
+    for (std::vector<Tile*> row: board)
+    {   
+        std::cout<< rows[i] << " | "; //print row headers
+        i++;  
+        for (Tile* val: row) {
+            if (val == nullptr){
+                std::cout <<"  | ";
+            }
+            else{
+                std::cout << val->getLetter() << " | ";//print board contents
+            }
+        }
+        std::cout << std::endl;
+    }
+} 
 
-private:
-    std::vector<std::vector<Tile*>> board;
-};
+bool Board::tileExists(int x, int y) {
+    return board[y][x] != nullptr;
+}
 
-#endif // ASSIGN2_BOARD_H
+
+Tile* Board::getTile(int row, int col){
+    return board[row][col];
+}
+void Board::setTile(Tile* tile, int row, int col){
+    board[row][col] = tile;
+}

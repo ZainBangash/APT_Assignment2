@@ -3,9 +3,14 @@
 #include <iostream>
 
 Board::Board() {
-    Tile *tile = new Tile(' ', 0);
-    // initialize board size
-     board.resize(BOARD_SIZE, std::vector<Tile*> (BOARD_SIZE, tile));
+    // Tile *tile = new Tile(' ', 0);
+    // // initialize board size
+    //  board.resize(BOARD_SIZE, std::vector<Tile*> (BOARD_SIZE, tile));
+
+    board.resize(BOARD_SIZE);
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        board[i].resize(BOARD_SIZE);
+    }
 }
 
 void Board::printBoard(){
@@ -18,12 +23,21 @@ void Board::printBoard(){
         std::cout<< rows[i] << " | "; //print row headers
         i++;  
         for (Tile* val: row) {
-            std::cout << val->getLetter() << " | ";//print board contents
+            if (val == nullptr){
+                std::cout <<"  | ";
+            }
+            else{
+                std::cout << val->getLetter() << " | ";//print board contents
+            }
         }
         std::cout << std::endl;
     }
-   
 } 
+
+bool Board::tileExists(int x, int y) {
+    return board[y][x] != nullptr;
+}
+
 
 Tile* Board::getTile(int row, int col){
     return board[row][col];

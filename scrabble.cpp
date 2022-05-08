@@ -2,6 +2,7 @@
 //#include "LinkedList.h"
 #include "Board.h"
 #include "Player.h"
+#include "Tile.h"
 
 #include <iostream>
 #include <vector>
@@ -15,27 +16,50 @@
 void mainMenu();
 void playGame(std::vector<Player*> playerNames);
 std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string player);
-Board checkCommand(std::string command, Board board);
+Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced);
 bool checkName(std::string name);
 bool fileExists(std::string fileName);
 int changeCharToInt(char charToChange);
+bool validateTilePlacement(std::vector<PlacedTile> tilesPlaced, Board* board);
 
 int main(void) {
-   //LinkedList* list  =  new LinkedList();
+  // LinkedList* list = new LinkedList();
    //delete list;
-   std::string command;
-   Board board = Board();
-   board.printBoard();
-   while(true){
-      std::cout<<"Enter command: ";
-      getline(std::cin, command);
-      board = checkCommand(command, board);
-      board.printBoard();
-   }
+   //make vector to store tile to be placed
+                  //declare vector in a way that it doesnt get overwritten 
+                  //check validateTilePlacement
+                  //if valid place the most recent tile from the vector
+                  //use a pointer to the board
+   // Board board = Board();
+   // board.printBoard();
+   // std::vector<Player*> playerNames;
+   // playerNames = addPlayers(playerNames, "1");
+   // std::cin.clear(); //allows for multiple inputs
+   // std::cin.sync();
+   // playerNames = addPlayers(playerNames, "2");
+   // std::cout << std::endl;
+   // std::cout << "Player 1: " << playerNames[0]->getName() << ", " << playerNames[0]->getPoints() << std::endl;
+   // std::cout << "Player 2: " << playerNames[1]->getName() << ", " << playerNames[1]->getPoints() << std::endl;
+   // std::vector<PlacedTile> tilesPlaced; 
+   // int playerID = 0;
+   // while(true){
+   //    std::cout<<"Enter command: ";
+   //    getline(std::cin, command);
+   //    if (command == "pass"){
+   //       if(playerID == 0){
+   //          playerID = 1;
+   //       }else{
+   //          playerID = 0;
+   //       }
+   //    }else{
+   //       board = checkCommand(command, board, &tilesPlaced);
+   //       board.printBoard();
+   //    }
+   // }
    
 
    //std::cout.flush();   
-   //mainMenu();
+   mainMenu();
    return EXIT_SUCCESS;
 }
 
@@ -70,6 +94,7 @@ void mainMenu(){
             std::cout << std::endl;            
             std::cout << "Lets Play!" << std::endl;
             std::cout << std::endl;
+            playGame(playerNames);
          }else if(menuSelection == 2){ //load game option
             std::cin.clear();
             std::cin.sync();
@@ -114,9 +139,25 @@ void mainMenu(){
 }
 
 void playGame(std::vector<Player*> playerNames){
+   std::string command;
    Board board = Board();
    board.printBoard();
-   
+   std::vector<PlacedTile> tilesPlaced; 
+   int playerID = 0;
+   while(true){
+      std::cout<<"Enter command: ";
+      getline(std::cin, command);
+      if (command == "pass"){
+         if(playerID == 0){
+            playerID = 1;
+         }else{
+            playerID = 0;
+         }
+      }else{
+         board = checkCommand(command, board, &tilesPlaced);
+         board.printBoard();
+      }
+   }
    
 }
 
@@ -205,7 +246,7 @@ int changeCharToInt(char charToChange){
 }
 
 
-Board checkCommand(std::string command, Board board){ //validates command
+Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced){ //validates command
    //bool validCommand = true;
    std::string inter;
    std::vector<std::string> tokens;
@@ -231,10 +272,32 @@ Board checkCommand(std::string command, Board board){ //validates command
                   //delete
                   Tile* tile = new Tile(tokens[1].at(0), 0);
                   //delete
-                  board.setTile(tile, rowInt, columnInt);
+                  struct PlacedTile placeTile;
+                  placeTile.tile = tile;
+                  placeTile.x = columnInt;
+                  placeTile.y = rowInt;
+                  tilesPlaced->push_back(placeTile);
+                  if(validateTilePlacement(*tilesPlaced, &board)){
+                     board.setTile(tile, rowInt, columnInt);
+                  }else{
+                     tilesPlaced->pop_back();
+                  }
                }
             }else if(tokens[3].size() == 3){
                if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
+                  //TODO 
+                  //make vector to store tile to be placed
+                  //declare vector in a way that it doesnt get overwritten 
+                  //check validateTilePlacement
+                  //if valid place the most recent tile from the vector
+                  //use a pointer to the board
+
+                  //place more checks for the commands
+                  //and connect player to hand
+
+                  //print BINGO if user places 7 tiles in a row
+                  //TODO
+
                   std::string column;
                   column.push_back(tokens[3].at(1));
                   column.push_back(tokens[3].at(2));
@@ -243,7 +306,16 @@ Board checkCommand(std::string command, Board board){ //validates command
                   //delete
                   Tile* tile = new Tile(tokens[1].at(0), 0);
                   //delete
-                  board.setTile(tile, rowInt, columnInt);
+                  struct PlacedTile placeTile;
+                  placeTile.tile = tile;
+                  placeTile.x = columnInt;
+                  placeTile.y = rowInt;
+                  tilesPlaced->push_back(placeTile);
+                  if(validateTilePlacement(*tilesPlaced, &board)){
+                     board.setTile(tile, rowInt, columnInt);
+                  }else{
+                     tilesPlaced->pop_back();
+                  }
                }
             }else{
                //validCommand = false;
@@ -279,6 +351,41 @@ Board checkCommand(std::string command, Board board){ //validates command
       std::cout << "Invalid Command" << std::endl;
    }
    return board;
+
+}
+
+bool validateTilePlacement(std::vector<PlacedTile> tilesPlaced, Board* board) {
+    bool valid = true;
+
+    // check tiles are not placed on top of one another
+    if(board->tileExists(tilesPlaced.at(tilesPlaced.size()-1).x, tilesPlaced.at(tilesPlaced.size()-1).y)){
+       valid = false;
+       std::cout<<"Can't place a tile on another tile"<<std::endl;
+    }
+
+    // check all tiles placed are in the same row or column
+   if (tilesPlaced.size() > 1) {
+      int row = tilesPlaced[0].y;
+      int col = tilesPlaced[0].x;
+
+      if (row == tilesPlaced[1].y) {
+         for (PlacedTile t : tilesPlaced) {
+            if (t.y != row) {
+               valid = false;
+               std::cout<<"Tile has to be in the same row"<<std::endl;
+            }
+         }
+      } else {
+            for (PlacedTile t : tilesPlaced) {
+                if (t.x != col) {
+                    valid = false;
+                    std::cout<<"Tile has to be in the same row"<<std::endl;
+                }
+            }
+        }
+   }
+
+    return valid;
 
 }
 

@@ -11,11 +11,16 @@ typedef int Value;
 class Tile {
 public:
    Tile(Letter letter, Value value);
-   // ~Tile();
    Letter getLetter();
 
    Letter letter;
    Value  value;
+};
+
+struct PlacedTile {
+    Tile* tile;
+    int x;
+    int y;
 };
 
 #endif // ASSIGN2_TILE_H
