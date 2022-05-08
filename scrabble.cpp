@@ -150,8 +150,10 @@ void playGame(std::vector<Player*> playerNames){
       if (command == "pass"){
          if(playerID == 0){
             playerID = 1;
+            tilesPlaced.clear();
          }else{
             playerID = 0;
+            tilesPlaced.clear();
          }
       }else{
          board = checkCommand(command, board, &tilesPlaced);
@@ -279,6 +281,9 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
                   tilesPlaced->push_back(placeTile);
                   if(validateTilePlacement(*tilesPlaced, &board)){
                      board.setTile(tile, rowInt, columnInt);
+                     if(tilesPlaced->size() == 7){
+                        std::cout << "BINGO!" << std::endl;
+                     }
                   }else{
                      tilesPlaced->pop_back();
                   }
@@ -286,11 +291,6 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
             }else if(tokens[3].size() == 3){
                if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
                   //TODO 
-                  //make vector to store tile to be placed
-                  //declare vector in a way that it doesnt get overwritten 
-                  //check validateTilePlacement
-                  //if valid place the most recent tile from the vector
-                  //use a pointer to the board
 
                   //place more checks for the commands
                   //and connect player to hand
@@ -313,6 +313,9 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
                   tilesPlaced->push_back(placeTile);
                   if(validateTilePlacement(*tilesPlaced, &board)){
                      board.setTile(tile, rowInt, columnInt);
+                     if(tilesPlaced->size() == 7){
+                        std::cout << "BINGO!" << std::endl;
+                     }
                   }else{
                      tilesPlaced->pop_back();
                   }
@@ -334,7 +337,6 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
       }else{
          std::cout << "replace Valid" << std::endl;
       }
-   }else if(tokens[0]=="pass"){ // passes turn
    }else if(tokens[0]=="save"){ //saves game info in file
       std::ifstream myfile;
       myfile.open(tokens[1]);
