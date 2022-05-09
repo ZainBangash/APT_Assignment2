@@ -70,9 +70,9 @@ void mainMenu(){
             std::cout << "Student ID: ID" << std::endl;
             std::cout << "Email: email" << std::endl;
             std::cout << std::endl;
-            std::cout << "Name: Mark" << std::endl;
-            std::cout << "Student ID: ID" << std::endl;
-            std::cout << "Email: email" << std::endl;
+            std::cout << "Name: Mark Forcina" << std::endl;
+            std::cout << "Student ID: s9971085" << std::endl;
+            std::cout << "Email: s9971085@student.rmit.edu.au" << std::endl;
             std::cout << "----------------------------------" << std::endl;
             std::cout << std::endl;
          }else if(menuSelection == 4){//stop the program

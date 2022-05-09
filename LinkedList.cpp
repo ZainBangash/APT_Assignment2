@@ -3,11 +3,14 @@
 
 LinkedList::LinkedList() {
    head = nullptr;
-
-   // TODO
+   for(int i = 0; i < other.size(); ++i){
+        Tile* tile = new Tile(*other.get(i));
+        add_back(tile);
+    }
 }
 
 LinkedList::~LinkedList() {
+   clear();
 }
 
 int LinkedList::size(){
@@ -94,32 +97,57 @@ void LinkedList::remove_front(){
     
 }
 void LinkedList::remove_back(){
-    if (head == nullptr){
-       std::cout <<"The list is empty" << std::endl
+    if(head != nullptr){
+        Node* current = head;
+        //pre should point to node before current;
+        Node* prev = nullptr;
+
+        while(current->next != nullptr){
+            prev = current;
+            current = current->next;
+        }
+
+        if(prev == nullptr){
+            head = nullptr;
+        }else{
+            prev->next = nullptr;
+        }
+
+        delete current->tile;
+        delete current;
     }
- 
-    if (head->next == nullptr) {
-        delete head;
-    }
- 
-    // Find the second last node
-    Node* second_last = head;
-    while (second_last->next->next != nullptr)
-        second_last = second_last->next;
- 
-    // Delete last node
-    delete (second_last->next);
- 
-    // Change next of second last
-    second_last->next = nullptr;
  
 }
 
 void LinkedList::remove(int index){
-    
+    if(index >= 0 && index < size()){
+        if(head != nullptr){
+            int counter = 0;
+            Node* current = head;
+            //pre should point to node before current;
+            Node* prev = nullptr;
+
+            while(counter != index){
+                ++counter;
+                prev = current;
+                current = current->next;
+            }
+
+            if(prev == nullptr){
+                head = current->next;
+            }else{
+                prev->next = current->next;
+            }
+
+            delete current->tile;
+            delete current;
+        }
+    }
 
 }
 
 void LinkedList::clear(){
-    
+    while(head != nullptr){
+        remove_front();
+    }
 }
