@@ -3,7 +3,6 @@
 
 LinkedList::LinkedList() {
    head = nullptr;
-<<<<<<< HEAD
    for(int i = 0; i < other.size(); ++i){
         Tile* tile = new Tile(*other.get(i));
         add_back(tile);
@@ -11,13 +10,7 @@ LinkedList::LinkedList() {
 }
 
 LinkedList::~LinkedList() {
-   clear();
-=======
-}
-
-LinkedList::~LinkedList() {
 	clear();
->>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
 }
 
 int LinkedList::size(){
@@ -96,7 +89,6 @@ void LinkedList::remove_front(){
 
 }
 void LinkedList::remove_back(){
-<<<<<<< HEAD
     if(head != nullptr){
         Node* current = head;
         //pre should point to node before current;
@@ -117,57 +109,12 @@ void LinkedList::remove_back(){
         delete current;
     }
  
-=======
-    if (head != nullptr){
-        // if there is only one node, delete it
-        if (head->next == nullptr) {
-            delete head;
-        } else {
-
-            // Find the second last node
-            Node* second_last = head;
-            while (second_last->next->next != nullptr)
-                second_last = second_last->next;
-
-            // Delete last node
-            delete second_last->next;
-            second_last->next = nullptr;
-        }
-
-    } else {
-        cout <<"The list is empty" << endl;
-    }
-
-
-
->>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
 }
 
 void LinkedList::remove(int index){
     if(index >= 0 && index < size()){
         if(head != nullptr){
             int counter = 0;
-<<<<<<< HEAD
-            Node* current = head;
-            //pre should point to node before current;
-            Node* prev = nullptr;
-
-            while(counter != index){
-                ++counter;
-                prev = current;
-                current = current->next;
-            }
-
-            if(prev == nullptr){
-                head = current->next;
-            }else{
-                prev->next = current->next;
-            }
-
-            delete current->tile;
-            delete current;
-        }
-=======
             Node* toRemove = head;
             //prev should point to node before current;
             Node* prev = nullptr;
@@ -192,7 +139,6 @@ void LinkedList::remove(int index){
         }
     } else {
         cout << "invalid index: " << index << endl;
->>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
     }
 
 }
@@ -201,8 +147,4 @@ void LinkedList::clear(){
     while(head != nullptr){
         remove_front();
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
