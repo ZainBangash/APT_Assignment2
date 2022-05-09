@@ -8,18 +8,24 @@
 #include <vector>
 
 using std::vector;
+using std::string;
 
 
 class Player {
     public:
-        Player(Board* board);
+        Player(string name, Board* board);
         ~Player();
         bool validate(vector<PlacedTile> tilesPlaced);
         void addTileToHand(Tile* tile);
-        bool hasTile(Letter l);
+        bool hasTile(char tileLetter);
+        Tile* popTile(char tileLetter);
+        void replaceTile(char letter, Tile* tile);
+        void removeTile(char letter);
 
     private:
         LinkedList hand;
+        int score;
+        string name;
         // need reference to board for validation
         Board* board;
 

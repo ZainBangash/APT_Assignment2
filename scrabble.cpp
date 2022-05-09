@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Tile.h"
 #include "Player.h"
+#include "TileBag.h"
 
 #include <iostream>
 #include <vector>
@@ -23,7 +24,15 @@ int main(void) {
     // LinkedList* list = new LinkedList();
     //delete list;
     //std::cout.flush();
-    mainMenu();
+    //mainMenu();
+    TileBag t = TileBag();
+    t.addTile(new Tile('A', 2));
+    t.addTile(new Tile('B', 2));
+    t.addTile(new Tile('C', 2));
+    t.shuffleTiles();
+    while (t.tilesLeft() > 0) {
+        cout << t.popTile()->letter << endl;
+    }
     //Board b = Board();
 
     //b.setTile(0, 5, new Tile('Z', 10));

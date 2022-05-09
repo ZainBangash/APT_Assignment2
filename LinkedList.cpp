@@ -49,14 +49,15 @@ void LinkedList::add_front(Tile* tile){
 
 }
 void LinkedList::add_back(Tile* tile){
-   if(head == nullptr) {
-    head = new Node(tile, nullptr);
-  } else {
+    if(head == nullptr) {
+        head = new Node(tile, nullptr);
+    } else {
 
     //traverse to the last node
     Node* temp = head;
-    while(temp->next != nullptr)
-      temp = temp->next;
+    while(temp->next != nullptr) {
+        temp = temp->next;
+    }
 
     //Change the next of last node to new node
     temp->next = new Node(tile, nullptr);
@@ -84,6 +85,8 @@ void LinkedList::remove_front(){
 
 
 }
+
+
 void LinkedList::remove_back(){
     if (head != nullptr){
         // if there is only one node, delete it
@@ -93,8 +96,9 @@ void LinkedList::remove_back(){
 
             // Find the second last node
             Node* second_last = head;
-            while (second_last->next->next != nullptr)
+            while (second_last->next->next != nullptr) {
                 second_last = second_last->next;
+            }
 
             // Delete last node
             delete second_last->next;
@@ -104,8 +108,6 @@ void LinkedList::remove_back(){
     } else {
         cout <<"The list is empty" << endl;
     }
-
-
 
 }
 
