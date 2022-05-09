@@ -81,7 +81,7 @@ void mainMenu(){
             std::cout << "Student ID: s3817403" << std::endl;
             std::cout << "Email: s3817403@student.rmit.edu.au" << std::endl;
             std::cout << std::endl;
-            std::cout << "Name: Tania" << std::endl;
+            std::cout << "Name: Tania Rastegar" << std::endl;
             std::cout << "Student ID: ID" << std::endl;
             std::cout << "Email: email" << std::endl;
             std::cout << std::endl;
@@ -127,7 +127,7 @@ bool addPlayers(std::vector<std::string> playerNames, std::string player){ //add
    // if(checkName(name2)==true){
    //    playerNames.push_back(name2); // add player 2 name to playerNames vector
    // }
-   
+
    return validPlayer;
 }
 
