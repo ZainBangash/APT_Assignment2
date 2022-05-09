@@ -1,41 +1,32 @@
-#include "Player.h"
+#ifndef ASSIGN2_LINKEDLIST_H
+#define ASSIGN2_LINKEDLIST_H
 
-Player::Player(std::string name, int points){
-   this->name = name;
-   this->points = points;
-}
+#include "Node.h"
 
-void Player::addTileToHand(Tile* tile) {
-    hand.add_back(tile);
-}
+#include <iostream>
 
-// returns true when the player has a specific tile in their hand
-bool Player::hasTile(char tileLetter) {
-    bool result = false;
-    for (int i = 0; i < hand.size(); i++) {
-        Tile* tilePtr = hand.get(i);
-        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
-            result = true;
-        }
-    }
-    return result;
-}
+using std::cout;
+using std::endl;
 
-// Player::~Player() {
-//    delete name;
-//    delete points;
-// }
+class LinkedList {
+public:
 
-int Player::getPoints(){
-    return points;
-}
+   LinkedList();
+   ~LinkedList();
 
-std::string Player::getName(){
-    return name;
-}
+   int size();
+
+   Tile* get(int index);
+   void add_front(Tile* tile);
+   void add_back(Tile* tile);
+   void remove_front();
+   void remove_back();
+   void remove(int index);
+   void clear();
+
+private:
+   Node* head;
+};
 
 
-void Player::setPoints(int points){
-    this->points = points;
-}
-
+#endif // ASSIGN2_LINKEDLIST_H
