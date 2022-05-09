@@ -1,8 +1,9 @@
-#include <iostream>
 #include "LinkedList.h"
+
 
 LinkedList::LinkedList() {
    head = nullptr;
+<<<<<<< HEAD
    for(int i = 0; i < other.size(); ++i){
         Tile* tile = new Tile(*other.get(i));
         add_back(tile);
@@ -11,10 +12,16 @@ LinkedList::LinkedList() {
 
 LinkedList::~LinkedList() {
    clear();
+=======
+}
+
+LinkedList::~LinkedList() {
+	clear();
+>>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
 }
 
 int LinkedList::size(){
-    
+
     int length = 0;
 
     Node* current = head;
@@ -44,59 +51,52 @@ Tile* LinkedList::get(int index){
     return retTile;
 }
 
-void LinkedList::add_front(Tile* data){
-   if (head == nullptr)
-   {
-      head = data;
-   }
-   else
-   {
-  // Make the new node point to the (old) head.
-      next = head;
+void LinkedList::add_front(Tile* tile){
+    // fill new node
+	Node* node = new Node(tile, head);
 
-  // Make the head pointer point to the new node.
-      head = data;
-   }
-    
+    // set it to the first node
+    head = node;
+
 }
-void LinkedList::add_back(Tile* data){
+void LinkedList::add_back(Tile* tile){
    if(head == nullptr) {
-    head = data;
+    head = new Node(tile, nullptr);
   } else {
-    
-    //5. Else, traverse to the last node
+
+    //traverse to the last node
     Node* temp = head;
     while(temp->next != nullptr)
       temp = temp->next;
-    
-    //6. Change the next of last node to new node
-    temp->next = data;
+
+    //Change the next of last node to new node
+    temp->next = new Node(tile, nullptr);
   }
-    
+
 }
 
 void LinkedList::remove_front(){
-   if (head == nullptr)
-        {
-            cout << "The list is empty";
-        }
-
+   if (head != nullptr) {
         // Check to see if the list has more than one item.
         // If it only has one node erase it.
-        if (head->next == nullptr)
-        {
+        if (head->next == nullptr) {
             delete head;
-        }
-        else
-        {
-            Node* next = head->next;
+            head = nullptr;
+        } else {
+            Node* newHead = head->next;
             delete head;
-            head = next;
-            head->prev = nullptr;
+            head = newHead;
         }
-    
+
+    } else {
+        cout << "The list is empty" << endl;
+    }
+
+
+
 }
 void LinkedList::remove_back(){
+<<<<<<< HEAD
     if(head != nullptr){
         Node* current = head;
         //pre should point to node before current;
@@ -117,12 +117,37 @@ void LinkedList::remove_back(){
         delete current;
     }
  
+=======
+    if (head != nullptr){
+        // if there is only one node, delete it
+        if (head->next == nullptr) {
+            delete head;
+        } else {
+
+            // Find the second last node
+            Node* second_last = head;
+            while (second_last->next->next != nullptr)
+                second_last = second_last->next;
+
+            // Delete last node
+            delete second_last->next;
+            second_last->next = nullptr;
+        }
+
+    } else {
+        cout <<"The list is empty" << endl;
+    }
+
+
+
+>>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
 }
 
 void LinkedList::remove(int index){
     if(index >= 0 && index < size()){
         if(head != nullptr){
             int counter = 0;
+<<<<<<< HEAD
             Node* current = head;
             //pre should point to node before current;
             Node* prev = nullptr;
@@ -142,6 +167,32 @@ void LinkedList::remove(int index){
             delete current->tile;
             delete current;
         }
+=======
+            Node* toRemove = head;
+            //prev should point to node before current;
+            Node* prev = nullptr;
+
+            // count until we find node at index
+            while(counter != index){
+                ++counter;
+                prev = toRemove;
+                toRemove = toRemove->next;
+            }
+
+            if(prev == nullptr){
+                // if there is only one node, remove it
+                head = nullptr;
+            }else{
+                // make the list skip over the removed node
+                prev->next = toRemove->next;
+            }
+
+            delete toRemove;
+
+        }
+    } else {
+        cout << "invalid index: " << index << endl;
+>>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
     }
 
 }
@@ -150,4 +201,8 @@ void LinkedList::clear(){
     while(head != nullptr){
         remove_front();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9be71bfecd0671ccbb7f2735bbd72ad036bc0ce2
