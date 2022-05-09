@@ -127,6 +127,7 @@ bool addPlayers(std::vector<std::string> playerNames, std::string player){ //add
    // if(checkName(name2)==true){
    //    playerNames.push_back(name2); // add player 2 name to playerNames vector
    // }
+   
    return validPlayer;
 }
 
