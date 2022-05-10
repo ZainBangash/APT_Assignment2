@@ -1,8 +1,6 @@
-
 #include "Tile.h"
-Tile::Tile(Letter letter, Value value)
-{
+
+Tile::Tile(char letter, int value) {
    this->letter = letter;
    this->value = value;
-
 }

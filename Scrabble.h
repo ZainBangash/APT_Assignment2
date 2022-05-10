@@ -12,6 +12,7 @@
 #include <bits/stdc++.h>
 #include <fstream>
 #include <sstream>
+#include <set>
 
 using std::vector;
 using std::string;
@@ -19,6 +20,7 @@ using std::ofstream;
 using std::ifstream;
 using std::stringstream;
 using std::getline;
+using std::set;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -36,10 +38,18 @@ class Scrabble {
         vector<Player*> players;
 
         void mainMenu();
-        bool addPlayer(int playerNum);
-        bool checkCommand(string command);
+        void playGame();
+        void addPlayer(int playerNum);
         bool checkName(string name);
         bool fileExists(string fileName);
+
+
+        void checkCommand(string command, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints, bool* savedGame);
+
+
+        void placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints);
+        void points(set<Tile*> tilesPoints, int playerID, int row, int col, Tile* tile);
+        bool validateTilePlacement(vector<PlacedTile> tilesPlaced);
 
 };
 

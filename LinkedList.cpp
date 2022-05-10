@@ -2,11 +2,11 @@
 
 
 LinkedList::LinkedList() {
-   head = nullptr;
+    head = nullptr;
 }
 
 LinkedList::~LinkedList() {
-	clear();
+    clear();
 }
 
 int LinkedList::size(){
@@ -61,7 +61,7 @@ void LinkedList::add_back(Tile* tile){
 
     //Change the next of last node to new node
     temp->next = new Node(tile, nullptr);
-  }
+    }
 
 }
 
@@ -110,6 +110,7 @@ void LinkedList::remove_back(){
     }
 
 }
+
 
 void LinkedList::remove(int index){
     if(index >= 0 && index < size()){

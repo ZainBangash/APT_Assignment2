@@ -1,11 +1,12 @@
-#ifndef A2_PLAYER
-#define A2_PLAYER
+#ifndef ASSIGN2_PLAYER_H
+#define ASSIGN2_PLAYER_H
 
 #include "Tile.h"
 #include "LinkedList.h"
 #include "Board.h"
 
 #include <vector>
+#include <string>
 
 using std::vector;
 using std::string;
@@ -13,29 +14,31 @@ using std::string;
 
 class Player {
     public:
-        Player(string name, Board* board);
+        Player(string name, int id, Board* board);
         ~Player();
-        bool validate(vector<PlacedTile> tilesPlaced);
+
         void addTileToHand(Tile* tile);
         bool hasTile(char tileLetter);
         Tile* popTile(char tileLetter);
-        void replaceTile(char letter, Tile* tile);
+        Tile* replaceTile(char letter, Tile* newTile);
         void removeTile(char letter);
+
+        int getID();
+        int getPoints();
+        string getName();
+        void setPoints(int points);
+        void addPoints(int pointsGained);
+
 
     private:
         LinkedList hand;
-        int score;
+        int id;
+
+        int points;
         string name;
         // need reference to board for validation
         Board* board;
 
 };
 
-
-// also for validation
-enum WordDirection {
-    Horizontal,
-    Vertical
-};
-
-#endif
+#endif // ASSIGN2_PLAYER_H

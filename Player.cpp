@@ -1,11 +1,14 @@
 #include "Player.h"
 
 
-Player::Player(string name, Board* board) {
-    this->name = name;
-    this->score = 0;
-    this->board = board;
+
+Player::Player(string name, int id, Board* board){
+   this->name = name;
+   this->points = 0;
+   this->id = id;
+   this->board = board;
 }
+
 
 Player::~Player() {}
 
@@ -13,6 +16,7 @@ Player::~Player() {}
 void Player::addTileToHand(Tile* tile) {
     hand.add_back(tile);
 }
+
 
 // returns true when the player has a specific tile in their hand
 bool Player::hasTile(char tileLetter) {
@@ -49,4 +53,31 @@ Tile* Player::popTile(char tileLetter) {
 
     return result;
 
+}
+
+
+//TODO
+Tile* Player::replaceTile(char letter, Tile* newTile) {return nullptr;}
+
+
+int Player::getID() {
+    return this->id;
+}
+
+int Player::getPoints(){
+    return points;
+}
+
+string Player::getName(){
+    return name;
+}
+
+
+void Player::setPoints(int points){
+    this->points = points;
+}
+
+
+void Player::addPoints(int pointsGained) {
+    this->points = this->points + pointsGained;
 }

@@ -27,9 +27,8 @@ void Scrabble::run() {
 
 
 void Scrabble::mainMenu(){
-   int menuSelection;
+   int menuSelection = 0;
    while (true){
-      static vector<string> playerNames;
       cout << "Welcome To Scrabble!" << endl;
       cout << "-------------------" << endl;
       cout << "Menu" << endl;
@@ -52,8 +51,13 @@ void Scrabble::mainMenu(){
             cin.sync();
             addPlayer(2);
             cout << endl;
+            cout << "Player 1: " << players[0]->getName() << ", " << players[0]->getPoints() << endl;
+            cout << "Player 2: " << players[1]->getName() << ", " << players[1]->getPoints() << endl;
+            cout << endl;
             cout << "Lets Play!" << endl;
             cout << endl;
+            playGame();
+
          }else if(menuSelection == 2){ //load game option
             cin.clear();
             cin.sync();
@@ -63,6 +67,7 @@ void Scrabble::mainMenu(){
             getline(cin, fileName);// name of file
             fileExists(fileName); //checks if file exists
             cout << endl;
+
          }else if(menuSelection == 3){ //prints name, id and email of group members
             cout << "----------------------------------" << endl;
             cout << "Name: Zain Haider Bangash" << endl;
@@ -103,25 +108,54 @@ void Scrabble::mainMenu(){
    }
 }
 
-bool Scrabble::addPlayer(int playerNum){ //adds Player names
-   bool validPlayer = true;
+void Scrabble::playGame(){//scrabble
+   string command;
+   board.printBoard();
+   vector<PlacedTile> tilesPlaced; //tiles placed by a player in a turn
+   set<Tile*> tilesPoints;//tiles for which points have been given
+   int playerID = 0;
+   while(true){
+      cout<<"Enter command: ";
+      getline(cin, command);
+      if(command.empty() == false){
+         if (command == "pass"){ //switches playerID
+            if(playerID == 0){
+               playerID = 1;
+               tilesPlaced.clear(); //empties vector
+               tilesPoints.clear();
+            }else{
+               playerID = 0;
+               tilesPlaced.clear();
+               tilesPoints.clear();
+            }
+         }else{
+            bool savedGame = false;
+            checkCommand(command, &tilesPlaced, playerID, &tilesPoints, &savedGame); //validates command and acts accordingly
+            if(savedGame == true){
+               cout<<endl;
+               cout<<"Game saved successfully" << endl;
+               cout<<endl;
+               break;
+            }else{
+               board.printBoard(); //prints board
+            }
+         }
+      }
+   }
+
+}
+
+
+void Scrabble::addPlayer(int playerNum){ //adds Player names
    cin.clear(); //allows for multiple inputs
    cin.sync();
    cout << "Enter a name for player "<<  playerNum <<" (uppercase characters only)" << endl;
    string playerName;
    getline(cin, playerName);  //player 1 name input
    if(checkName(playerName)==true){
-      players.push_back(new Player(playerName, &board)); //add player 1 name to playerNames vector
+      players.push_back(new Player(playerName, playerNum, &board));
    }
    cout << endl;
-   // cout << "Enter a name for player 2 (uppercase characters only)" << endl;
-   // string name2;
-   // getline(cin, name2); // player 2 name input
-   // checkName(name2);
-   // if(checkName(name2)==true){
-   //    playerNames.push_back(name2); // add player 2 name to playerNames vector
-   // }
-   return validPlayer;
 }
 
 
@@ -138,14 +172,14 @@ bool Scrabble::fileExists(string fileName){//checks if file exists
 }
 
 bool Scrabble::checkName(string name){ //validates names
-   bool validName = true;
-	for (std::__cxx11::basic_string<char>::size_type i = 0; i < name.size(); i++)
-	{
-		if (((int)(name[i]) < 65 || (int)(name[i]) > 90) && (int)(name[i]) != 32) //checks for ascii number of capital letter and ignores spaces
+    bool validName = true;
+    for (std::__cxx11::basic_string<char>::size_type i = 0; i < name.size(); i++)
+    {
+        if (((int)(name[i]) < 65 || (int)(name[i]) > 90) && (int)(name[i]) != 32) //checks for ascii number of capital letter and ignores spaces
         {                                                                      //if it contains anything but capital letters or space returns false
             validName = false;
         }
-	}
+    }
 
     if (validName == false){ //if name is false then prints the following message
         cout << "invalid name, name should be uppercase and contain only letters" << endl;
@@ -153,57 +187,217 @@ bool Scrabble::checkName(string name){ //validates names
     return validName;
 }
 
-bool checkCommand(string command){ //validates command
+void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints){
+   string column;
+   column.push_back(tokens[3].at(1));
+   if(tokens[3].size() == 3){
+      column.push_back(tokens[3].at(2));
+   }
+   int columnInt = stoi(column) - 1;
+   // convert from upper case alphabet to row int
+   int rowInt = tokens[3].at(0) - 65;
+   // delete
+   Tile *tile = new Tile(tokens[1].at(0), 1);
+   // delete
+   struct PlacedTile placeTile;
+   placeTile.tile = tile;
+   placeTile.x = columnInt;
+   placeTile.y = rowInt;
+   tilesPlaced->push_back(placeTile);
+   if (validateTilePlacement(*tilesPlaced))
+   { // check if tile can be placed
+      board.setTile(columnInt, rowInt, tile);
+      tilesPoints->insert(tile);
+      points(*tilesPoints, playerID, rowInt, columnInt, tile);
+      if (tilesPlaced->size() == 7)
+      { // prints BINGO if user places 7 tiles
+         cout << "BINGO!" << endl;
+         players.at(playerID)->addPoints( + 50);
+         cout << "Player: " << players.at(playerID)->getName() << ", points: " << players.at(playerID)->getPoints() << endl;
+      }
+   }
+   else
+   {
+      tilesPlaced->pop_back(); // removes if validateTilePlacement fails
+   }
+}
+
+
+void Scrabble::points(set<Tile*> tilesPoints, int playerID, int row, int col, Tile* tile){
+   //check tiles to the right, lefy, above and below
+   players.at(playerID)->addPoints(tile->value);
+   int right = 1;
+   int left = 1;
+   int above = 1;
+   int below = 1;
+   for (int i = 0; i < BOARD_SIZE; i++) {
+      if(col + right < BOARD_SIZE){
+         if (tilesPoints.find(board.getTile(row, col+1)) != tilesPoints.end()){}
+         else{
+            if((board.getTile(row, col+right) != nullptr)){
+               players.at(playerID)->addPoints(board.getTile(row, col+right)->value);
+               right++;
+               cout<< "RIGHT Player: " << players.at(playerID)->getName() << ", " << players.at(playerID)->getPoints()<<endl;
+            }
+         }
+      }
+      if(col - left >= 0){
+         if (tilesPoints.find(board.getTile(row, col-1)) != tilesPoints.end()){}
+         else{
+            if(board.getTile(row, col-left) != nullptr ){
+               players.at(playerID)->addPoints(board.getTile(row, col-left)->value);
+               left++;
+               cout<< "LEFT Player: " << players.at(playerID)->getName() << ", " << players.at(playerID)->getPoints() <<endl;
+            }
+         }
+      }
+      if(row + below < BOARD_SIZE){
+         if (tilesPoints.find(board.getTile(row+1, col)) != tilesPoints.end()){}
+         else{
+            if(board.getTile(row+below, col) != nullptr ){
+               players.at(playerID)->addPoints(board.getTile(row+below, col)->value);
+               below++;
+               cout<< "BELOW Player: " << players.at(playerID)->getName() << ", " << players.at(playerID)->getPoints()<<endl;
+            }
+         }
+      }
+      if(row - above >= 0){
+         if (tilesPoints.find(board.getTile(row-1, col)) != tilesPoints.end()){}
+         else{
+            if(board.getTile(row-above, col) != nullptr){
+               players.at(playerID)->addPoints(board.getTile(row-above, col)->value);
+               above++;
+               cout<< "ABOVE Player: " << players.at(playerID)->getName() << ", " << players.at(playerID)->getPoints()<<endl;
+            }
+         }
+      }
+   }
+}
+
+
+void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints, bool* savedGame){ //validates command
    //bool validCommand = true;
    string inter;
    vector<string> tokens;
-   //getline(cin, command);
    stringstream check1(command);
-   //hardcode rows and columns
-   //getline find out
    while(getline(check1, inter, ' ')){ //tokenizes command string
       tokens.push_back(inter);
    }
    if(tokens[0]=="place"){ //if first word is place
-      string rows = "ABCDEF";
+      string rows = "ABCDEFGHIJKLMNO";
       //check if tile is in hand
-      if(tokens[2]!="at"){
-         //validCommand = false;
-         cout<<"Place command error at 'at' "<<endl;
-      }if((rows.find(tokens[3].at(0)) != string::npos)){
-         cout << "Row valid" << endl;
-         if(tokens[3].at(1) == '0' ||tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'){
-            cout << " Column valid" << endl;
-         }
-      }else{
-         cout << "Place command error at grid coordinates" << endl;
 
+      if(tokens[2]!="at"){ // if second word isnt "at"
+         cout<<"Place command error at 'at' "<<endl;
+      }else{
+         if((rows.find(tokens[3].at(0)) != string::npos)){ //if the row coordinate is valid
+            if(tokens[3].size() == 2){ // if column number is single digit
+               if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
+                  placeTile(tokens, tilesPlaced, playerID, tilesPoints);
+               }else{
+               cout << "Place command error at grid coordinates" << endl;
+            }
+            }else if(tokens[3].size() == 3){// if column number is single digit
+               if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
+                  placeTile(tokens, tilesPlaced, playerID, tilesPoints);
+               }
+            }else{
+               cout << "Place command error at grid coordinates" << endl;
+            }
+         }else{
+            //validCommand = false;
+            cout << "Place command error at grid coordinates" << endl;
+         }
       }
    }else if(tokens[0]=="replace"){ // if first word is replace
-        //TODO HERE
       string alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
       if(!alphabets.find(tokens[2])){//CHECK IF TILE IS IN HAND
          //validCommand = false;
       }else{
-         cout << "replace Valid" << endl;
+         cout << "replace Valid" << std::endl;
       }
-   }else if(tokens[0]=="pass"){ // passes turn
    }else if(tokens[0]=="save"){ //saves game info in file
-      ifstream myfile;
-      myfile.open(tokens[1]);
-      if(myfile) { //if file exists it overwrites file
-         ofstream fileToOverWrite(tokens[1], ofstream::trunc);
-         fileToOverWrite << "OverWriting Existing File";
-      }else{ //writes in file
-         ofstream fileToWrite(tokens[1]);
-         fileToWrite << "Files can be tricky, but it is fun enough!";
-         fileToWrite.close();
+      ofstream myfile;
+      if(tokens.size() == 2){
+         myfile.open(tokens[1]);
+         if(myfile) { //writes to file
+            ofstream fileToOverWrite(tokens[1], ofstream::trunc);
+            fileToOverWrite << players.at(0)->getName() <<"\n";
+            fileToOverWrite << players.at(0)->getPoints() <<"\n";
+            //print hand for player 1
+            fileToOverWrite << players.at(1)->getName() <<"\n";
+            fileToOverWrite << players.at(1)->getPoints() <<"\n";
+            //print hand for player 2
+            vector<string> rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"}; // rows
+            fileToOverWrite<<"    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  " <<"\n"; //print column headers
+            fileToOverWrite<<"  ------------------------------------------------------------- " <<"\n";
+            int i = 0;
+            for (int row = 0; row < BOARD_SIZE; row++){
+               fileToOverWrite<< rows[i] << " | "; //print row headers
+               i++;
+               for (int col = 0; col < BOARD_SIZE; col++){
+                  if (board.getTile(row, col) == nullptr){
+                    fileToOverWrite <<"  | ";
+                  }
+                  else{
+                    fileToOverWrite << board.getTile(row, col)->letter << " | ";//print board contents
+                  }
+               }
+               fileToOverWrite << "\n";
+            }
+
+
+            //print tile bag contents
+            fileToOverWrite << players.at(playerID)->getName();
+            fileToOverWrite.close();
+         }
+         myfile.close();
+         *savedGame = true;
+      }else{
+         cout<<"Save command error"<<endl;
+         cout<<endl;
       }
-      myfile.close();
+
    }else{
       cout << "Invalid Command" << endl;
    }
-   return true;
+
+}
+
+
+
+bool Scrabble::validateTilePlacement(vector<PlacedTile> tilesPlaced) {
+    bool valid = true;
+
+    // check tiles are not placed on top of one another
+    if(board.tileExists(tilesPlaced.at(tilesPlaced.size()-1).x, tilesPlaced.at(tilesPlaced.size()-1).y)){
+       valid = false;
+       std::cout<<"Can't place a tile on another tile"<<std::endl;
+    }
+
+    // check all tiles placed are in the same row or column
+   if (tilesPlaced.size() > 1) {
+      int row = tilesPlaced[0].y;
+      int col = tilesPlaced[0].x;
+
+      if (row == tilesPlaced[1].y) {
+         for (PlacedTile t : tilesPlaced) {
+            if (t.y != row) {
+               valid = false;
+               std::cout<<"Tile has to be in the same row"<<std::endl;
+            }
+         }
+      } else {
+            for (PlacedTile t : tilesPlaced) {
+                if (t.x != col) {
+                    valid = false;
+                    std::cout<<"Tile has to be in the same col"<<std::endl;
+                }
+            }
+        }
+   }
+
+    return valid;
 
 }
