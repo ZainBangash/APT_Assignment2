@@ -8,9 +8,27 @@ TileBag::TileBag() {
 TileBag::~TileBag() {};
 
 
+void TileBag::loadTiles(istream &strm) {
+
+    for(string line; getline(strm, line);) {
+
+        std::string inter;
+        std::vector<std::string> tokens;
+        std::stringstream check1(line);
+        while(getline(check1, inter, ' ')){ //tokenizes command string
+            tokens.push_back(inter);
+       }
+
+       // Tile(char letter, int value)
+       bag.add_front(new Tile(tokens[0].at(0), stoi(tokens[1])));
+
+    }
+};
+
 void TileBag::addTile(Tile* tile) {
     bag.add_front(tile);
 }
+
 
 Tile* TileBag::popTile() {
     Tile* retTile = bag.get(0);
