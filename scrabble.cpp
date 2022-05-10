@@ -15,11 +15,11 @@
 #define EXIT_SUCCESS    0
 
 void mainMenu();
-void playGame(std::vector<Player*> playerNames);
+void playGame(std::vector<Player*> playerNames, int* playerID, Board* board);
 std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string player);
 Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced, std::vector<Player*>* playerNames, int playerID, std::set<Tile*>* tilesPoints, bool* savedGame);
 bool checkName(std::string name);
-bool fileExists(std::string fileName);
+void fileExists(std::string fileName, std::vector<Player*>* playerNames, int* playerID);
 int changeCharToInt(char charToChange);
 bool validateTilePlacement(std::vector<PlacedTile> tilesPlaced, Board* board);
 Board placeTile(std::vector<std::string> tokens, std::vector<PlacedTile>* tilesPlaced, Board board, std::vector<Player*>* playerNames, int playerID, std::set<Tile*>* tilesPoints);
@@ -64,15 +64,20 @@ void mainMenu(){
             std::cout << std::endl;            
             std::cout << "Lets Play!" << std::endl;
             std::cout << std::endl;
-            playGame(playerNames);
+            int playerID = 0;
+            Board board = Board();
+            playGame(playerNames, &playerID, &board);
          }else if(menuSelection == 2){ //load game option
+            std::vector<Player*> playerNames;
+            int playerID = 0;
             std::cin.clear();
             std::cin.sync();
             std::cout << std::endl;
             std::cout << "Enter the filename from which load a game" << std::endl;
             std::string fileName;
             getline(std::cin, fileName);// name of file
-            fileExists(fileName); //checks if file exists
+            getline(std::cin, fileName);// name of file
+            fileExists(fileName, &playerNames, &playerID); //checks if file exists
             std::cout << std::endl;         
             
          }else if(menuSelection == 3){ //prints name, id and email of group members
@@ -110,37 +115,36 @@ void mainMenu(){
    }
 }
 
-void playGame(std::vector<Player*> playerNames){//scrabble
+void playGame(std::vector<Player*> playerNames, int* playerID, Board* board){//scrabble
    std::string command;
-   Board board = Board();
-   board.printBoard();
+   
+   board->printBoard();
    std::vector<PlacedTile> tilesPlaced; //tiles placed by a player in a turn
    std::set<Tile*> tilesPoints;//tiles for which points have been given
-   int playerID = 0;
    while(true){
       std::cout<<"Enter command: ";
       getline(std::cin, command);
       if(command.empty() == false){
          if (command == "pass"){ //switches playerID 
-            if(playerID == 0){ 
-               playerID = 1;
+            if(*playerID == 0){ 
+               *playerID = 1;
                tilesPlaced.clear(); //empties vector
                tilesPoints.clear();
             }else{
-               playerID = 0;
+               *playerID = 0;
                tilesPlaced.clear();
                tilesPoints.clear();
             }
          }else{
             bool savedGame = false;
-            board = checkCommand(command, board, &tilesPlaced, &playerNames, playerID, &tilesPoints, &savedGame); //validates command and acts accordingly
+            *board = checkCommand(command, *board, &tilesPlaced, &playerNames, *playerID, &tilesPoints, &savedGame); //validates command and acts accordingly
             if(savedGame == true){
                std::cout<<std::endl;
                std::cout<<"Game saved successfully" << std::endl;
                std::cout<<std::endl;
                break;
             }else{
-               board.printBoard(); //prints board
+               board->printBoard(); //prints board
             }
          }
       }
@@ -165,15 +169,57 @@ std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string pl
    return playerNames;
 }
 
-bool fileExists(std::string fileName){//checks if file exists
+void fileExists(std::string fileName, std::vector<Player*>* playerNames, int* playerID){//checks if file exists
+   Board board = Board();
+   int row = 0;
+   int col = 0;
    std::ifstream myfile;
+   std::string data;
    myfile.open(fileName); //opens file
+   int line = 1;
    if(myfile) { //if return true file exists
-      std::cout<<"File Exists"<<std::endl;
-      return true;
+      getline(myfile, data);
+      while ( !myfile.eof() ) { // keep reading until end-of-file
+         if(line == 1 || line == 3){
+            Player* player = new Player(data, 0);
+            playerNames->push_back(player);
+         }else if(line == 2 || line == 4){
+            if (line == 2){
+               playerNames->at(0)->setPoints(std::stoi(data));
+            }else{
+               playerNames->at(1)->setPoints(std::stoi(data));
+            }
+         }else if(line > 6 && line < 22){
+            std::string substring  = data.substr(4, 61);
+            for(std::__cxx11::basic_string<char>::size_type f = 0; f < substring.size(); f++){
+               if(row < BOARD_SIZE){
+                  if(f%4 == 0){
+                     if(substring.at(f)!=' '){
+                        Tile* tile = new Tile(substring.at(f), 1);
+                        board.setTile(tile, row, col);
+                     }
+                     col++;
+                  }
+               }
+            }
+            row++;
+            col = 0;
+         }else if(line == 22){
+            if(playerNames->at(0)->getName() == data){
+               *playerID = 0;
+            }else{
+               *playerID = 1;
+            }
+         }
+         //cout << "The next line is " << data << endl;
+         getline(myfile, data); // sets EOF flag if no value found
+         line++;
+
+      }
+      myfile.close();
+      playGame(*playerNames, playerID, &board);
    } else { //else file doesnt exist
       std::cout<<"File Doesn't Exist" << std::endl;
-      return false;
    }
 }
 
