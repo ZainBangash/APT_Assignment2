@@ -17,7 +17,7 @@
 void mainMenu();
 void playGame(std::vector<Player*> playerNames);
 std::vector<Player*> addPlayers(std::vector<Player*> playerNames, std::string player);
-Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced, std::vector<Player*>* playerNames, int playerID, std::set<Tile*>* tilesPoints);
+Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced, std::vector<Player*>* playerNames, int playerID, std::set<Tile*>* tilesPoints, bool* savedGame);
 bool checkName(std::string name);
 bool fileExists(std::string fileName);
 int changeCharToInt(char charToChange);
@@ -26,49 +26,6 @@ Board placeTile(std::vector<std::string> tokens, std::vector<PlacedTile>* tilesP
 void points(std::set<Tile*> tilesPoints, Board* board, std::vector<Player*>* playerNames, int playerID, int row, int col, Tile* tile);
 
 int main(void) {
-  // LinkedList* list = new LinkedList();
-   //delete list;
-   
-   /*points -- IF a tile is placed, you get points for that tile plus any and all tiles that are connected to it
-
-   Example ---
-                  A
-                  B
-                  C
-         A  B  C     C  B  A        IF D is placed in the centre then you get points for D and all that tiles that touch it and all the tiles
-                  C                 that touch those. D + 4c + 4b + 4a
-                  B
-                  A 
-   */     
-   // Board board = Board();
-   // Tile* tile = new Tile('A', 1);
-   // Tile* tile1 = new Tile('A', 1);
-   // Tile* tile2 = new Tile('A', 1);
-   // Tile* tile3 = new Tile('A', 1);
-   // Tile* tile4 = new Tile('A', 1);
-   // Tile* tile5 = new Tile('A', 1);
-   // Tile* tile6 = new Tile('A', 1);
-
-   // board.setTile(tile, 1, 0);
-   // board.setTile(tile1, 1, 1);
-   // board.setTile(tile2, 0, 1);
-   // board.setTile(tile3, 1, 2);
-   // board.setTile(tile4, 2, 1);
-   // board.setTile(tile5, 1, 3);
-   // board.setTile(tile6, 3, 1);
-
-   // board.printBoard();
-   //     Player* zain = new Player("Zain", 0);
-   //  std::vector<Player*> playerNames(1, zain);
-   //  //playerNames->push_back(zain);
-   // std::set<Tile*> tilesPoints;
-   // tilesPoints.insert(tile4);
-   // int playerID = 0;
-   //  int row = 1;
-   //  int col = 1;
-   
-   // points(tilesPoints, &board, &playerNames, playerID, row, col, tile1);
-   // std::cout<< "Player: " << playerNames.at(playerID)->getName() << ", " << playerNames.at(playerID)->getPoints();
    mainMenu();
    return EXIT_SUCCESS;
 }
@@ -117,6 +74,7 @@ void mainMenu(){
             getline(std::cin, fileName);// name of file
             fileExists(fileName); //checks if file exists
             std::cout << std::endl;         
+            
          }else if(menuSelection == 3){ //prints name, id and email of group members
             std::cout << "----------------------------------" << std::endl;
             std::cout << "Name: Zain Haider Bangash" << std::endl;
@@ -162,19 +120,29 @@ void playGame(std::vector<Player*> playerNames){//scrabble
    while(true){
       std::cout<<"Enter command: ";
       getline(std::cin, command);
-      if (command == "pass"){ //switches playerID 
-         if(playerID == 0){ 
-            playerID = 1;
-            tilesPlaced.clear(); //empties vector
-            tilesPoints.clear();
+      if(command.empty() == false){
+         if (command == "pass"){ //switches playerID 
+            if(playerID == 0){ 
+               playerID = 1;
+               tilesPlaced.clear(); //empties vector
+               tilesPoints.clear();
+            }else{
+               playerID = 0;
+               tilesPlaced.clear();
+               tilesPoints.clear();
+            }
          }else{
-            playerID = 0;
-            tilesPlaced.clear();
-            tilesPoints.clear();
+            bool savedGame = false;
+            board = checkCommand(command, board, &tilesPlaced, &playerNames, playerID, &tilesPoints, &savedGame); //validates command and acts accordingly
+            if(savedGame == true){
+               std::cout<<std::endl;
+               std::cout<<"Game saved successfully" << std::endl;
+               std::cout<<std::endl;
+               break;
+            }else{
+               board.printBoard(); //prints board
+            }
          }
-      }else{
-         board = checkCommand(command, board, &tilesPlaced, &playerNames, playerID, &tilesPoints); //validates command and acts accordingly
-         board.printBoard(); //prints board
       }
    }
    
@@ -349,7 +317,7 @@ void points(std::set<Tile*> tilesPoints, Board* board, std::vector<Player*>* pla
    }
 }
 
-Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced,std::vector<Player*>* playerNames, int playerID,std::set<Tile*>* tilesPoints){ //validates command
+Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* tilesPlaced,std::vector<Player*>* playerNames, int playerID,std::set<Tile*>* tilesPoints, bool* savedGame){ //validates command
    //bool validCommand = true;
    std::string inter;
    std::vector<std::string> tokens;
@@ -362,20 +330,20 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
       //check if tile is in hand
       
       if(tokens[2]!="at"){ // if second word isnt "at"
-         //validCommand = false;
          std::cout<<"Place command error at 'at' "<<std::endl;
       }else{
          if((rows.find(tokens[3].at(0)) != std::string::npos)){ //if the row coordinate is valid
             if(tokens[3].size() == 2){ // if column number is single digit
                if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
                   board = placeTile(tokens, tilesPlaced, board, playerNames, playerID, tilesPoints);
-               }
+               }else{
+               std::cout << "Place command error at grid coordinates" << std::endl;
+            }
             }else if(tokens[3].size() == 3){// if column number is single digit
                if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
                   board = placeTile(tokens, tilesPlaced, board, playerNames, playerID, tilesPoints);
                }
             }else{
-               //validCommand = false;
                std::cout << "Place command error at grid coordinates" << std::endl;
             }
          }else{
@@ -392,17 +360,47 @@ Board checkCommand(std::string command, Board board, std::vector<PlacedTile>* ti
          std::cout << "replace Valid" << std::endl;
       }
    }else if(tokens[0]=="save"){ //saves game info in file
-      std::ifstream myfile;
-      myfile.open(tokens[1]);
-      if(myfile) { //if file exists it overwrites file
-         std::ofstream fileToOverWrite(tokens[1], std::ofstream::trunc);
-         fileToOverWrite << "OverWriting Existing File";
-      }else{ //writes in file 
-         std::ofstream fileToWrite(tokens[1]);
-         fileToWrite << "Files can be tricky, but it is fun enough!";
-         fileToWrite.close();
+      std::ofstream myfile;
+      if(tokens.size() == 2){
+         myfile.open(tokens[1]);
+         if(myfile) { //writes to file
+            std::ofstream fileToOverWrite(tokens[1], std::ofstream::trunc);
+            fileToOverWrite << playerNames->at(0)->getName() <<"\n";
+            fileToOverWrite << playerNames->at(0)->getPoints() <<"\n";
+            //print hand for player 1
+            fileToOverWrite << playerNames->at(1)->getName() <<"\n";
+            fileToOverWrite << playerNames->at(1)->getPoints() <<"\n";
+            //print hand for player 2
+            std::vector<std::string> rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"}; // rows
+            fileToOverWrite<<"    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  " <<"\n"; //print column headers
+            fileToOverWrite<<"  ------------------------------------------------------------- " <<"\n"; 
+            int i = 0;
+            for (int row = 0; row < BOARD_SIZE; row++){
+               fileToOverWrite<< rows[i] << " | "; //print row headers
+               i++;
+               for (int col = 0; col < BOARD_SIZE; col++){   
+                  if (board.getTile(row, col) == nullptr){
+                    fileToOverWrite <<"  | ";
+                  }
+                  else{
+                    fileToOverWrite << board.getTile(row, col)->getLetter() << " | ";//print board contents
+                  }
+               }
+               fileToOverWrite << "\n";
+            }
+
+            
+            //print tile bag contents
+            fileToOverWrite << playerNames->at(playerID)->getName();
+            fileToOverWrite.close();
+         }
+         myfile.close();
+         *savedGame = true;
+      }else{
+         std::cout<<"Save command error"<<std::endl;
+         std::cout<<std::endl;
       }
-      myfile.close();
+      
    }else{
       std::cout << "Invalid Command" << std::endl;
    }
@@ -444,6 +442,4 @@ bool validateTilePlacement(std::vector<PlacedTile> tilesPlaced, Board* board) {
     return valid;
 
 }
-
-
 
