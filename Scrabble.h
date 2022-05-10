@@ -16,6 +16,7 @@
 
 using std::vector;
 using std::string;
+using std::stoi;
 using std::ofstream;
 using std::ifstream;
 using std::stringstream;
@@ -36,19 +37,20 @@ class Scrabble {
         TileBag tileBag;
         Board board;
         vector<Player*> players;
+        int currentPlayer;
 
         void mainMenu();
         void playGame();
         void addPlayer(int playerNum);
         bool checkName(string name);
-        bool fileExists(string fileName);
+        void loadGame(string fileName);
 
 
-        void checkCommand(string command, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints, bool* savedGame);
+        void checkCommand(string command, vector<PlacedTile>* tilesPlaced, set<Tile*>* tilesPoints, bool* savedGame);
 
 
-        void placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced, int playerID, set<Tile*>* tilesPoints);
-        void points(set<Tile*> tilesPoints, int playerID, int row, int col, Tile* tile);
+        void placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced, set<Tile*>* tilesPoints);
+        void points(set<Tile*> tilesPoints, int row, int col, Tile* tile);
         bool validateTilePlacement(vector<PlacedTile> tilesPlaced);
 
 };
