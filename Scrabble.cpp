@@ -29,7 +29,7 @@ void Scrabble::run() {
 
 
 void Scrabble::mainMenu(){
-   int menuSelection = 0;
+   string menuSelection = "";
    while (true){
       cout << "Welcome To Scrabble!" << endl;
       cout << "-------------------" << endl;
@@ -39,18 +39,14 @@ void Scrabble::mainMenu(){
       cout << "2. Load Game" << endl;
       cout << "3. Credits" << endl;
       cout << "4. Quit" << endl;
-      cin >> menuSelection;
+      getline(cin, menuSelection);
       if(!cin.eof()){
-         if(menuSelection == 1){ //play game option
+         if(menuSelection == "1"){ //play game option
 
             cout << endl;
             cout << "Starting a New Game" << endl;
             cout<<endl;
-            string message;
-            getline(cin, message);
             addPlayer(1);
-            cin.clear(); //allows for multiple inputs
-            cin.sync();
             addPlayer(2);
             cout << endl;
             cout << "Player 1: " << players[0]->getName() << ", " << players[0]->getPoints() << endl;
@@ -60,17 +56,15 @@ void Scrabble::mainMenu(){
             cout << endl;
             playGame();
 
-         }else if(menuSelection == 2){ //load game option
-            cin.clear();
-            cin.sync();
+         }else if(menuSelection == "2"){ //load game option
             cout << endl;
             cout << "Enter the filename from which load a game" << endl;
             string fileName;
-            getline(cin, fileName);// name of file
+            getline(cin >> std::ws, fileName);// name of file
             loadGame(fileName);
             cout << endl;
 
-         }else if(menuSelection == 3){ //prints name, id and email of group members
+         }else if(menuSelection == "3"){ //prints name, id and email of group members
             cout << "----------------------------------" << endl;
             cout << "Name: Zain Haider Bangash" << endl;
             cout << "Student ID: s3817403" << endl;
@@ -83,7 +77,6 @@ void Scrabble::mainMenu(){
             cout << "Name: Mark" << endl;
             cout << "Student ID: ID" << endl;
             cout << "Email: email" << endl;
-            cout << "----------------------------------" << endl;
             cout << endl;
             cout << "Name: Christopher Tait" << endl;
             cout << "Student ID: s3899475" << endl;
@@ -91,7 +84,7 @@ void Scrabble::mainMenu(){
             cout << "----------------------------------" << endl;
             cout << endl;
 
-         }else if(menuSelection == 4){//stop the program
+         }else if(menuSelection == "4"){//stop the program
             cout << "Good Bye" << endl;
             break;
          }
@@ -99,7 +92,7 @@ void Scrabble::mainMenu(){
             cin.clear();
             cin.sync();
             cout << endl;
-            cout<<"Invalid output"<<endl;
+            cout<<"Invalid input"<<endl;
             cout << endl;
 
          }
@@ -148,8 +141,8 @@ void Scrabble::playGame(){//scrabble
 
 
 void Scrabble::addPlayer(int playerNum){ //adds Player names
-   cin.clear(); //allows for multiple inputs
-   cin.sync();
+   //cin.clear(); //allows for multiple inputs
+   //cin.sync();
    cout << "Enter a name for player "<<  playerNum <<" (uppercase characters only)" << endl;
    string playerName;
    getline(cin, playerName);  //player 1 name input
@@ -241,6 +234,7 @@ void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced,
    int columnInt = stoi(column) - 1;
    // convert from upper case alphabet to row int
    int rowInt = tokens[3].at(0) - 65;
+   cout << tokens[3].at(0) - 65;
    // delete
    Tile *tile = new Tile(tokens[1].at(0), 1);
    // delete
