@@ -7,11 +7,10 @@ Scrabble::Scrabble(string tileFile) {
     ifstream is;
     is.open("ScrabbleTiles.txt");
 
-    string s;
-    getline(is, s);
-
     tileBag.loadTiles(is);
     tileBag.shuffleTiles();
+
+    cout << "HEREE" << tileBag.popTile()->value << endl;
 
     board = Board();
 
@@ -109,18 +108,33 @@ void Scrabble::playGame(){//scrabble
    vector<PlacedTile> tilesPlaced; //tiles placed by a player in a turn
    set<Tile*> tilesPoints;//tiles for which points have been given
    while(true){
+       // remove
+      cout << currentPlayer << endl;
+      players[currentPlayer]->printHand();
       cout<<"Enter command: ";
       getline(cin, command);
       if(command.empty() == false){
          if (command == "pass"){ //switches currentPlayer
             if(currentPlayer == 0){
-               currentPlayer = 1;
-               tilesPlaced.clear(); //empties vector
-               tilesPoints.clear();
+                currentPlayer = 1;
+                tilesPlaced.clear(); //empties vector
+                tilesPoints.clear();
+                // renew player hand
+                for (uint i = 0; i < tilesPlaced.size(); i++) {
+                    if (tileBag.tilesLeft() > 0) {
+                        players[currentPlayer]->addTileToHand(tileBag.popTile());
+                    }
+                }
             }else{
-               currentPlayer = 0;
-               tilesPlaced.clear();
-               tilesPoints.clear();
+                currentPlayer = 0;
+                tilesPlaced.clear();
+                tilesPoints.clear();
+                for (uint i = 0; i < tilesPlaced.size(); i++) {
+                    if (tileBag.tilesLeft() > 0) {
+                        players[currentPlayer]->addTileToHand(tileBag.popTile());
+                    }
+                }
+
             }
          }else{
             bool savedGame = false;
@@ -147,7 +161,11 @@ void Scrabble::addPlayer(int playerNum){ //adds Player names
    string playerName;
    getline(cin, playerName);  //player 1 name input
    if(checkName(playerName)==true){
-      players.push_back(new Player(playerName, playerNum, &board));
+       Player* p = new Player(playerName, playerNum, &board);
+        for (int i = 0; i < HAND_SIZE; i++) {
+            p->addTileToHand(tileBag.popTile());
+        }
+      players.push_back(p);
    }
    cout << endl;
 }
@@ -234,31 +252,31 @@ void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced,
    int columnInt = stoi(column) - 1;
    // convert from upper case alphabet to row int
    int rowInt = tokens[3].at(0) - 65;
-   cout << tokens[3].at(0) - 65;
-   // delete
-   Tile *tile = new Tile(tokens[1].at(0), 1);
-   // delete
-   struct PlacedTile placeTile;
-   placeTile.tile = tile;
-   placeTile.x = columnInt;
-   placeTile.y = rowInt;
-   tilesPlaced->push_back(placeTile);
-   if (validateTilePlacement(*tilesPlaced))
-   { // check if tile can be placed
-      board.setTile(columnInt, rowInt, tile);
-      tilesPoints->insert(tile);
-      points(*tilesPoints, rowInt, columnInt, tile);
-      if (tilesPlaced->size() == 7)
-      { // prints BINGO if user places 7 tiles
-         cout << "BINGO!" << endl;
-         players.at(currentPlayer)->addPoints( + 50);
-         cout << "Player: " << players.at(currentPlayer)->getName() << ", points: " << players.at(currentPlayer)->getPoints() << endl;
-      }
-   }
-   else
-   {
-      tilesPlaced->pop_back(); // removes if validateTilePlacement fails
-   }
+   // check if the player has the tile in their hand
+   if (players[currentPlayer]->hasTile(tokens[1].at(0))) {
+       struct PlacedTile placeTile;
+       placeTile.tile = players[currentPlayer]->getTile(tokens[1].at(0));
+       placeTile.x = columnInt;
+       placeTile.y = rowInt;
+       tilesPlaced->push_back(placeTile);
+       // validate that the player has the right tiles
+       if (validateTilePlacement(*tilesPlaced)) {
+          // check if tile can be placed
+          // remove tiles from hand
+          players[currentPlayer]->removeTile(tokens[1].at(0));
+          board.setTile(columnInt, rowInt, placeTile.tile);
+          tilesPoints->insert(placeTile.tile);
+          points(*tilesPoints, rowInt, columnInt, placeTile.tile);
+          if (tilesPlaced->size() == 7)
+          { // prints BINGO if user places 7 tiles
+             cout << "BINGO!" << endl;
+             players.at(currentPlayer)->addPoints( + 50);
+             cout << "Player: " << players.at(currentPlayer)->getName() << ", points: " << players.at(currentPlayer)->getPoints() << endl;
+          }
+       } else {
+          tilesPlaced->pop_back(); // removes if validateTilePlacement fails
+       }
+    }
 }
 
 
@@ -324,7 +342,6 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
    }
    if(tokens[0]=="place"){ //if first word is place
       string rows = "ABCDEFGHIJKLMNO";
-      //check if tile is in hand
 
       if(tokens[2]!="at"){ // if second word isnt "at"
          cout<<"Place command error at 'at' "<<endl;
@@ -349,12 +366,11 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
          }
       }
    }else if(tokens[0]=="replace"){ // if first word is replace
-      string alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-      if(!alphabets.find(tokens[2])){//CHECK IF TILE IS IN HAND
-         //validCommand = false;
+      if(players[currentPlayer]->hasTile(tokens[1].at(0))){//CHECK IF TILE IS IN HAND
+            players[currentPlayer]->replaceTile(tokens[0].at(0), tileBag.popTile());
       }else{
-         cout << "replace Valid" << std::endl;
+         cout << "you don't have that tile" << std::endl;
       }
    }else if(tokens[0]=="save"){ //saves game info in file
       ofstream myfile;

@@ -7,9 +7,11 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 using std::vector;
 using std::string;
+using std::cout;
 
 
 class Player {
@@ -19,9 +21,12 @@ class Player {
 
         void addTileToHand(Tile* tile);
         bool hasTile(char tileLetter);
+        Tile* getTile(char tileLetter);
         Tile* popTile(char tileLetter);
-        Tile* replaceTile(char letter, Tile* newTile);
+        void replaceTile(char letter, Tile* newTile);
         void removeTile(char letter);
+
+        void printHand();
 
         int getID();
         int getPoints();

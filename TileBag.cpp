@@ -20,7 +20,8 @@ void TileBag::loadTiles(istream &strm) {
        }
 
        // Tile(char letter, int value)
-       bag.add_front(new Tile(tokens[0].at(0), stoi(tokens[1])));
+       Tile* newTile = new Tile(tokens[0].at(0), stoi(tokens[1]));
+       bag.add_front(newTile);
 
     }
 };

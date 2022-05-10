@@ -33,6 +33,20 @@ bool Player::hasTile(char tileLetter) {
 };
 
 
+Tile* Player::getTile(char tileLetter) {
+    Tile* result = nullptr;
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
+            result = tilePtr;
+        }
+    }
+
+    return result;
+
+};
+
+
 Tile* Player::popTile(char tileLetter) {
 
     int tileIndex = -1;
@@ -56,8 +70,51 @@ Tile* Player::popTile(char tileLetter) {
 }
 
 
-//TODO
-Tile* Player::replaceTile(char letter, Tile* newTile) {return nullptr;}
+void Player::removeTile(char tileLetter) {
+
+    int tileIndex = -1;
+
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
+            tileIndex = i;
+        }
+    }
+    if (tileIndex != -1) {
+        hand.remove(tileIndex);
+    }
+
+}
+
+
+void Player::replaceTile(char letter, Tile* newTile) {
+    int tileIndex = -1;
+    Tile* tilePtr = nullptr;
+    for (int i = 0; i < hand.size(); i++) {
+        tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == letter) {
+            tileIndex = i;
+        }
+    }
+    if (tileIndex != -1) {
+        //replace tile
+        hand.remove(tileIndex);
+        hand.add_front(newTile);
+    }
+
+    // tile is out of the game
+    delete tilePtr;
+
+}
+
+
+void Player::printHand() {
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tile = hand.get(i);
+        std::printf("%c-%d ", tile->letter, tile->value);
+    }
+    cout << endl;
+}
 
 
 int Player::getID() {

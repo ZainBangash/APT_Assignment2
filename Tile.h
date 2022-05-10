@@ -5,7 +5,8 @@
 class Tile {
 public:
    Tile(char letter, int value);
-
+   char getLetter();
+   int getValue();
    char letter;
    char  value;
 };

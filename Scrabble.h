@@ -26,6 +26,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+#define HAND_SIZE 7
+
 class Scrabble {
     public:
         Scrabble(string tileFile);
