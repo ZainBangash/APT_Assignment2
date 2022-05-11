@@ -87,12 +87,16 @@ void mainMenu(){
             std::cout << "Email: s3817403@student.rmit.edu.au" << std::endl;
             std::cout << std::endl;
             std::cout << "Name: Tania" << std::endl;
-            std::cout << "Student ID: ID" << std::endl;
-            std::cout << "Email: email" << std::endl;
+            std::cout << "Student ID: s3821922" << std::endl;
+            std::cout << "Email: s3821922@student.rmit.edu.au" << std::endl;
             std::cout << std::endl;
-            std::cout << "Name: Mark" << std::endl;
-            std::cout << "Student ID: ID" << std::endl;
-            std::cout << "Email: email" << std::endl;
+            std::cout << "Name: Mark Forcina" << std::endl;
+            std::cout << "Student ID: s9971085" << std::endl;
+            std::cout << "Email: s9971085@rmit.edu.au" << std::endl;
+             std::cout << std::endl;
+            std::cout << "Name: Christopher Tait" << std::endl;
+            std::cout << "Student ID: s38899475" << std::endl;
+            std::cout << "Email: s38899475@student.rmit.edu.au" << std::endl;
             std::cout << "----------------------------------" << std::endl;
             std::cout << std::endl;
          }else if(menuSelection == 4){//stop the program
