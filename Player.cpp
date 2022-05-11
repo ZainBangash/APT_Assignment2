@@ -1,62 +1,22 @@
 #include "Player.h"
 
 
-Player::Player(Board* board) {
-    this->board = board;
+
+Player::Player(string name, int id, Board* board){
+   this->name = name;
+   this->points = 0;
+   this->id = id;
+   this->board = board;
 }
+
 
 Player::~Player() {}
 
-// runs all validation code, if it gets too long move sections into individual methods
-bool Player::validate(vector<PlacedTile> tilesPlaced) {
-    bool valid = true;
-    WordDirection wDir;
-
-    // check tiles are not placed on top of one another
-    for (PlacedTile t : tilesPlaced) {
-        if (board->tileExists(t.x, t.y)) {
-            valid = false;
-        }
-    }
-
-    // check all tiles placed are in the same row or column
-    if (tilesPlaced.size() > 1) {
-        int row = tilesPlaced[0].y;
-        int col = tilesPlaced[0].x;
-
-        if (row == tilesPlaced[1].y) {
-            wDir = Vertical;
-        } else {
-            wDir = Horizontal;
-        }
-
-        switch(wDir) {
-        case Vertical:
-            for (PlacedTile t : tilesPlaced) {
-                if (t.y != row) {
-                    valid = false;
-                }
-            }
-            break;
-
-        case Horizontal:
-            for (PlacedTile t : tilesPlaced) {
-                if (t.x != col) {
-                    valid = false;
-                }
-            }
-            break;
-
-        }
-    }
-
-    return valid;
-
-};
 
 void Player::addTileToHand(Tile* tile) {
     hand.add_back(tile);
 }
+
 
 // returns true when the player has a specific tile in their hand
 bool Player::hasTile(char tileLetter) {
@@ -71,3 +31,116 @@ bool Player::hasTile(char tileLetter) {
     return result;
 
 };
+
+
+Tile* Player::getTile(char tileLetter) {
+    Tile* result = nullptr;
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
+            result = tilePtr;
+        }
+    }
+
+    return result;
+
+};
+
+
+Tile* Player::popTile(char tileLetter) {
+
+    int tileIndex = -1;
+
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
+            tileIndex = i;
+        }
+    }
+    Tile* result;
+    if (tileIndex != -1) {
+        result = hand.get(tileIndex);
+        hand.remove(tileIndex);
+    } else {
+        result = nullptr;
+    }
+
+    return result;
+
+}
+
+
+void Player::removeTile(char tileLetter) {
+
+    int tileIndex = -1;
+
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->letter == tileLetter) {
+            tileIndex = i;
+        }
+    }
+    if (tileIndex != -1) {
+        hand.remove(tileIndex);
+    }
+
+}
+
+
+void Player::replaceTile(char letter, Tile* newTile) {
+    int tileIndex = -1;
+    Tile* tilePtr = nullptr;
+    std::cout<<"Tile selected " <<  letter << std::endl;
+    for (int i = 0; i < hand.size(); i++) {
+        tilePtr = hand.get(i);
+        if (tilePtr != nullptr && tilePtr->getLetter() == letter) {
+            std::cout<<"Tile from hand " <<  tilePtr->getLetter() << std::endl;
+            tileIndex = i;
+        }
+        //delete tilePtr;
+    }
+    if (tileIndex != -1) {
+        std::cout<<"new tile  " <<  newTile->getLetter() << ", " << newTile->getValue() << std::endl;
+
+        //replace tile
+        hand.remove(tileIndex);
+        hand.add_front(newTile);
+    }
+
+    // tile is out of the game
+    //delete tilePtr;
+
+}
+
+
+void Player::printHand() {
+    for (int i = 0; i < hand.size(); i++) {
+        Tile* tile = hand.get(i);
+        //std::printf("%c-%d ", tile->letter, tile->value);
+        std::cout<<tile->getLetter()<< "-" << tile->getValue()<< " ";
+    }
+    cout << endl;
+}
+
+
+int Player::getID() {
+    return this->id;
+}
+
+int Player::getPoints(){
+    return points;
+}
+
+string Player::getName(){
+    return name;
+}
+
+
+void Player::setPoints(int points){
+    this->points = points;
+}
+
+
+void Player::addPoints(int pointsGained) {
+    this->points = this->points + pointsGained;
+}

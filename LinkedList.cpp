@@ -2,15 +2,11 @@
 
 
 LinkedList::LinkedList() {
-   head = nullptr;
-   for(int i = 0; i < other.size(); ++i){
-        Tile* tile = new Tile(*other.get(i));
-        add_back(tile);
-    }
+    head = nullptr;
 }
 
 LinkedList::~LinkedList() {
-	clear();
+    clear();
 }
 
 int LinkedList::size(){
@@ -44,27 +40,28 @@ Tile* LinkedList::get(int index){
     return retTile;
 }
 
-void LinkedList::add_front(Tile* tile){
-    // fill new node
-	Node* node = new Node(tile, head);
 
-    // set it to the first node
-    head = node;
+void LinkedList::add_front(Tile* tile){
+    // fill new node at head
+    this->head = new Node(tile, this->head);
 
 }
+
+
 void LinkedList::add_back(Tile* tile){
-   if(head == nullptr) {
-    head = new Node(tile, nullptr);
-  } else {
+    if(head == nullptr) {
+        head = new Node(tile, nullptr);
+    } else {
 
     //traverse to the last node
     Node* temp = head;
-    while(temp->next != nullptr)
-      temp = temp->next;
+    while(temp->next != nullptr) {
+        temp = temp->next;
+    }
 
     //Change the next of last node to new node
     temp->next = new Node(tile, nullptr);
-  }
+    }
 
 }
 
@@ -88,16 +85,19 @@ void LinkedList::remove_front(){
 
 
 }
+
+
 void LinkedList::remove_back(){
     if(head != nullptr){
         Node* current = head;
         //pre should point to node before current;
         Node* prev = nullptr;
 
-        while(current->next != nullptr){
-            prev = current;
-            current = current->next;
-        }
+            // Find the second last node
+            Node* second_last = head;
+            while (second_last->next->next != nullptr) {
+                second_last = second_last->next;
+            }
 
         if(prev == nullptr){
             head = nullptr;
@@ -108,8 +108,8 @@ void LinkedList::remove_back(){
         delete current->tile;
         delete current;
     }
- 
 }
+
 
 void LinkedList::remove(int index){
     if(index >= 0 && index < size()){
@@ -128,7 +128,8 @@ void LinkedList::remove(int index){
 
             if(prev == nullptr){
                 // if there is only one node, remove it
-                head = nullptr;
+                // runs when the node to remove is the first node
+                head = head->next;
             }else{
                 // make the list skip over the removed node
                 prev->next = toRemove->next;

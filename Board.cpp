@@ -23,7 +23,6 @@ Board::~Board() {
 
 }
 
-
 bool Board::tileExists(int x, int y) {
     return board[y][x] != nullptr;
 }

@@ -18,6 +18,6 @@ Node::Node(Node& other)
 
 Node::~Node()
 {
-    tile = nullptr;
+    //tile = nullptr;
     next = nullptr;
 }
