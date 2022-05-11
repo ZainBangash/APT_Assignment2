@@ -43,6 +43,19 @@ int TileBag::tilesLeft() {
     return bag.size();
 }
 
+string TileBag::saveBag(){
+    string bagString;
+    for (int i = 0; i < bag.size(); i++) {
+        if(i == bag.size() - 1){
+            bagString = bagString + bag.get(i)->getLetter() + "-" + std::to_string(bag.get(i)->getValue());
+        }else{
+            bagString = bagString + bag.get(i)->getLetter() + "-" + std::to_string(bag.get(i)->getValue()) + ", ";
+        }
+        
+    }
+    return bagString;
+}
+
 void TileBag::shuffleTiles() {
     vector<Tile*> tmp;
     //

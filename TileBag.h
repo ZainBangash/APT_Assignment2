@@ -27,6 +27,7 @@ class TileBag {
         Tile* popTile();
         int tilesLeft();
         void shuffleTiles();
+        string saveBag();
 
     private:
         LinkedList bag;

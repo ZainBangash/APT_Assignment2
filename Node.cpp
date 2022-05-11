@@ -13,7 +13,7 @@ Node::Node(Tile* tile, Node* next) {
 
 Node::Node(Node& other)
 {
-    node = new LinkedList(*other.node);
+    //node = new LinkedList(*other.node);
 }
 
 Node::~Node()

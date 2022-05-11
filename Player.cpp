@@ -122,6 +122,20 @@ void Player::printHand() {
     cout << endl;
 }
 
+string Player::saveHand(){
+    string handString;
+    for (int i = 0; i < hand.size(); i++) {
+        if(i == hand.size() - 1){
+            handString = handString + hand.get(i)->getLetter() + "-" + std::to_string(hand.get(i)->getValue());
+        }else{
+            handString = handString + hand.get(i)->getLetter() + "-" + std::to_string(hand.get(i)->getValue()) + ", ";
+        }
+        
+    }
+    return handString;
+}
+
+
 
 int Player::getID() {
     return this->id;

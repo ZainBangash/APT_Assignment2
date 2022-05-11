@@ -26,9 +26,10 @@ class Player {
         Tile* popTile(char tileLetter);
         void replaceTile(char letter, Tile* newTile);
         void removeTile(char letter);
-
+        
         void printHand();
-
+        string saveHand();
+        
         int getID();
         int getPoints();
         string getName();

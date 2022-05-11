@@ -54,7 +54,8 @@ void Scrabble::mainMenu(){
             cout << endl;
             cout << "Lets Play!" << endl;
             cout << endl;
-            if(playGame() == true){
+            bool endGame = playGame();
+            if(endGame == true){
                cout << "Good Bye" << endl;
                break;
             }
@@ -114,58 +115,71 @@ bool Scrabble::playGame(){//scrabble
    set<Tile*> tilesPoints;//tiles for which points have been given
    while(true){
        // remove
-      players[currentPlayer]->printHand();
-      cout<<"Enter command: ";
-      getline(cin, command);
-      if(command.empty() == false){
-         if (command == "pass"){ //switches currentPlayer
-            if(currentPlayer == 0){
-                // renew player hand
-                for (uint i = 0; i < tilesPlaced.size(); i++) {
-                    //cout << "tilesLeft " << tileBag.tilesLeft();
-                    if (tileBag.tilesLeft() > 0) {
-                        players[currentPlayer]->addTileToHand(tileBag.popTile());
-                    }else{
-                       endGame = true;
-                       break;
-                    }
-                }
+      if(!cin.eof()){
+         players[currentPlayer]->printHand();
+         cout<<"Enter command: ";
+         getline(cin, command);
+         if(command.empty() == false){
+            if (command == "pass"){ //switches currentPlayer
+               if(currentPlayer == 0){
+                  // renew player hand
+                  for (uint i = 0; i < tilesPlaced.size(); i++) {
+                     //cout << "tilesLeft " << tileBag.tilesLeft();
+                     if (tileBag.tilesLeft() > 0) {
+                           players[currentPlayer]->addTileToHand(tileBag.popTile());
+                     }else{
+                        endGame = true;
+                        break;
+                     }
+                  }
 
-                currentPlayer = 1;
-                tilesPlaced.clear(); //empties vector
-                tilesPoints.clear();
+                  currentPlayer = 1;
+                  tilesPlaced.clear(); //empties vector
+                  tilesPoints.clear();
 
+               }else{
+                  for (uint i = 0; i < tilesPlaced.size(); i++) {
+                     //cout << "tilesLeft " << tileBag.tilesLeft();
+                     if (tileBag.tilesLeft() > 0) {
+                           players[currentPlayer]->addTileToHand(tileBag.popTile());
+                     }else{
+                        endGame = true;
+                        break;
+                     }
+                  }
+
+                  currentPlayer = 0;
+                  tilesPlaced.clear();
+                  tilesPoints.clear();
+
+               }
             }else{
-                for (uint i = 0; i < tilesPlaced.size(); i++) {
-                    //cout << "tilesLeft " << tileBag.tilesLeft();
-                    if (tileBag.tilesLeft() > 0) {
-                        players[currentPlayer]->addTileToHand(tileBag.popTile());
-                    }else{
-                       endGame = true;
-                       break;
-                    }
-                }
-
-                currentPlayer = 0;
-                tilesPlaced.clear();
-                tilesPoints.clear();
-
+               bool savedGame = false;
+               checkCommand(command, &tilesPlaced, &tilesPoints, &savedGame); //validates command and acts accordingly
+               if(savedGame == true){
+                  cout<<endl;
+                  cout<<"Game saved successfully" << endl;
+                  cout<<endl;
+                  // tileBag.~TileBag();
+                  // tilesPlaced.clear();
+                  // tilesPoints.cend();
+                  // board.~Board();
+                  // currentPlayer = 0;
+                  // savedGame = false;
+                  break;
+               }else{
+                  board.printBoard(); //prints board
+               }
             }
-         }else{
-            bool savedGame = false;
-            checkCommand(command, &tilesPlaced, &tilesPoints, &savedGame); //validates command and acts accordingly
-            if(savedGame == true){
-               cout<<endl;
-               cout<<"Game saved successfully" << endl;
-               cout<<endl;
-               break;
-            }else{
-               board.printBoard(); //prints board
-            }
+         }
+         else{
+            //break;
          }
       }
       else{
-         //break;
+         endGame = true;
+         break;
+         
       }
    }
    return endGame;
@@ -197,31 +211,55 @@ void Scrabble::addPlayer(int playerNum){ //adds Player names
 
 
 void Scrabble::loadGame(string fileName){//checks if file exists
-   Board board = Board();
+   board = Board();
    int row = 0;
    int col = 0;
-   ifstream myfile;
    string data;
+   ifstream myfile;
    myfile.open(fileName); //opens file
    int line = 1;
    int id = 0;
    if(myfile) { //if return true file exists
       getline(myfile, data);
-      while ( !myfile.eof() ) { // keep reading until end-of-file
-         if(line == 1 || line == 3){
+      while (!myfile.eof()) { // keep reading until end-of-file
+         if(line == 1 || line == 4){
             players.push_back(new Player(data, id, &board));
             ++id;
-         }else if(line == 2 || line == 4){
+         }else if(line == 2 || line == 5){
             if (line == 2){
                players.at(0)->setPoints(stoi(data));
             }else{
                players.at(1)->setPoints(stoi(data));
             }
-         }else if(line > 6 && line < 22){
+         }else if(line == 3 || line == 6 || line == 24){
+               string inter;
+               vector<string> tokens;
+               stringstream check1(data);
+               while(getline(check1, inter, ' ')){ //tokenizes command string
+                  tokens.push_back(inter);
+               }
+            if(line == 3){
+               for(uint i = 0; i < tokens.size(); i ++){
+                  int value = (int) tokens[i].at(2);
+                  players.at(0)->addTileToHand(new Tile(tokens[i].at(0), value - 48));
+               }
+            }else if(line == 6){
+               for(uint i = 0; i<tokens.size(); i ++){
+                  int value = (int) tokens[i].at(2);
+                  players.at(1)->addTileToHand(new Tile(tokens[i].at(0), value - 48));
+               }
+            }else{
+               for(uint i = 0; i < tokens.size(); i ++){
+                  int value = (int) tokens[i].at(2);
+                  tileBag.addTile(new Tile(tokens[i].at(0), value - 48));
+               }
+            }
+         }else if(line > 8 && line < 24){
             std::string substring  = data.substr(4, 61);
             for(uint f = 0; f < substring.size(); f++){
                if(row < BOARD_SIZE){
                   if(f%4 == 0){
+                     //std::cout<<substring.at(f)<<std::endl;
                      if(substring.at(f)!=' '){
                         Tile* tile = new Tile(substring.at(f), 1);
                         board.setTile(col, row, tile);
@@ -232,14 +270,14 @@ void Scrabble::loadGame(string fileName){//checks if file exists
             }
             row++;
             col = 0;
-         }else if(line == 22){
+         }else if(line == 25){
             if(players.at(0)->getName() == data){
                currentPlayer = 0;
             }else{
                currentPlayer = 1;
             }
          }
-         //cout << "The next line is " << data << endl;
+        // cout << "The next line is " << data << endl;
          getline(myfile, data); // sets EOF flag if no value found
          line++;
 
@@ -401,6 +439,15 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
          cout << "you don't have that tile" << std::endl;
       }
    }else if(tokens[0]=="save"){ //saves game info in file
+      for (uint i = 0; i < tilesPlaced->size() ; i++) {
+                     //cout << "tilesLeft " << tileBag.tilesLeft();
+         if (tileBag.tilesLeft() > 0) {
+            players[currentPlayer]->addTileToHand(tileBag.popTile());
+         }else{
+            endGame = true;
+            break;
+         }
+      }
       ofstream myfile;
       if(tokens.size() == 2){
          myfile.open(tokens[1]);
@@ -408,10 +455,10 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
             ofstream fileToOverWrite(tokens[1], ofstream::trunc);
             fileToOverWrite << players.at(0)->getName() <<"\n";
             fileToOverWrite << players.at(0)->getPoints() <<"\n";
-            //print hand for player 1
+            fileToOverWrite << players.at(0)->saveHand() <<"\n";
             fileToOverWrite << players.at(1)->getName() <<"\n";
             fileToOverWrite << players.at(1)->getPoints() <<"\n";
-            //print hand for player 2
+            fileToOverWrite << players.at(1)->saveHand() <<"\n";
             vector<string> rows = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"}; // rows
             fileToOverWrite<<"    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  " <<"\n"; //print column headers
             fileToOverWrite<<"  ------------------------------------------------------------- " <<"\n";
@@ -429,9 +476,8 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
                }
                fileToOverWrite << "\n";
             }
-
-
-            //print tile bag contents
+            
+            fileToOverWrite << tileBag.saveBag() << "\n";
             fileToOverWrite << players.at(currentPlayer)->getName();
             fileToOverWrite.close();
          }
