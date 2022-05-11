@@ -90,13 +90,17 @@ void Player::removeTile(char tileLetter) {
 void Player::replaceTile(char letter, Tile* newTile) {
     int tileIndex = -1;
     Tile* tilePtr = nullptr;
+    std::cout<<"Tile selected " <<  letter << std::endl;
     for (int i = 0; i < hand.size(); i++) {
         tilePtr = hand.get(i);
-        if (tilePtr != nullptr && tilePtr->letter == letter) {
+        if (tilePtr != nullptr && tilePtr->getLetter() == letter) {
+            std::cout<<"Tile from hand " <<  tilePtr->getLetter() << std::endl;
             tileIndex = i;
         }
     }
     if (tileIndex != -1) {
+        std::cout<<"new tile  " <<  newTile->getLetter() << ", " << newTile->getValue() << std::endl;
+
         //replace tile
         hand.remove(tileIndex);
         hand.add_front(newTile);
@@ -111,7 +115,8 @@ void Player::replaceTile(char letter, Tile* newTile) {
 void Player::printHand() {
     for (int i = 0; i < hand.size(); i++) {
         Tile* tile = hand.get(i);
-        std::printf("%c-%d ", tile->letter, tile->value);
+        //std::printf("%c-%d ", tile->letter, tile->value);
+        std::cout<<tile->getLetter()<< "-" << tile->getValue()<< " ";
     }
     cout << endl;
 }

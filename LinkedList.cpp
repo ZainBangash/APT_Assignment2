@@ -129,7 +129,7 @@ void LinkedList::remove(int index){
 
             if(prev == nullptr){
                 // if there is only one node, remove it
-                head = nullptr;
+                head = head->next;
             }else{
                 // make the list skip over the removed node
                 prev->next = toRemove->next;

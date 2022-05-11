@@ -40,9 +40,10 @@ class Scrabble {
         Board board;
         vector<Player*> players;
         int currentPlayer;
+        bool endGame;
 
         void mainMenu();
-        void playGame();
+        bool playGame();
         void addPlayer(int playerNum);
         bool checkName(string name);
         void loadGame(string fileName);

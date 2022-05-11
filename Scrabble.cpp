@@ -10,7 +10,7 @@ Scrabble::Scrabble(string tileFile) {
     tileBag.loadTiles(is);
     tileBag.shuffleTiles();
 
-    cout << "HEREE" << tileBag.popTile()->value << endl;
+    //cout << "HEREE" << tileBag.popTile()->value << endl;
 
     board = Board();
 
@@ -41,10 +41,11 @@ void Scrabble::mainMenu(){
       getline(cin, menuSelection);
       if(!cin.eof()){
          if(menuSelection == "1"){ //play game option
-
             cout << endl;
             cout << "Starting a New Game" << endl;
             cout<<endl;
+            std::cin.clear(); //allows for multiple inputs
+            std::cin.sync();
             addPlayer(1);
             addPlayer(2);
             cout << endl;
@@ -53,7 +54,10 @@ void Scrabble::mainMenu(){
             cout << endl;
             cout << "Lets Play!" << endl;
             cout << endl;
-            playGame();
+            if(playGame() == true){
+               cout << "Good Bye" << endl;
+               break;
+            }
 
          }else if(menuSelection == "2"){ //load game option
             cout << endl;
@@ -102,14 +106,14 @@ void Scrabble::mainMenu(){
    }
 }
 
-void Scrabble::playGame(){//scrabble
+bool Scrabble::playGame(){//scrabble
+   bool endGame = false;
    string command;
    board.printBoard();
    vector<PlacedTile> tilesPlaced; //tiles placed by a player in a turn
    set<Tile*> tilesPoints;//tiles for which points have been given
    while(true){
        // remove
-      cout << currentPlayer << endl;
       players[currentPlayer]->printHand();
       cout<<"Enter command: ";
       getline(cin, command);
@@ -123,6 +127,9 @@ void Scrabble::playGame(){//scrabble
                 for (uint i = 0; i < tilesPlaced.size(); i++) {
                     if (tileBag.tilesLeft() > 0) {
                         players[currentPlayer]->addTileToHand(tileBag.popTile());
+                    }else{
+                       endGame = true;
+                       break;
                     }
                 }
             }else{
@@ -132,6 +139,9 @@ void Scrabble::playGame(){//scrabble
                 for (uint i = 0; i < tilesPlaced.size(); i++) {
                     if (tileBag.tilesLeft() > 0) {
                         players[currentPlayer]->addTileToHand(tileBag.popTile());
+                    }else{
+                       endGame = true;
+                       break;
                     }
                 }
 
@@ -149,7 +159,11 @@ void Scrabble::playGame(){//scrabble
             }
          }
       }
+      else{
+         break;
+      }
    }
+   return endGame;
 
 }
 
@@ -157,17 +171,23 @@ void Scrabble::playGame(){//scrabble
 void Scrabble::addPlayer(int playerNum){ //adds Player names
    //cin.clear(); //allows for multiple inputs
    //cin.sync();
-   cout << "Enter a name for player "<<  playerNum <<" (uppercase characters only)" << endl;
-   string playerName;
-   getline(cin, playerName);  //player 1 name input
-   if(checkName(playerName)==true){
-       Player* p = new Player(playerName, playerNum, &board);
-        for (int i = 0; i < HAND_SIZE; i++) {
-            p->addTileToHand(tileBag.popTile());
-        }
-      players.push_back(p);
+   bool playerAdded = false;
+   while(playerAdded == false){
+      cin.clear(); //allows for multiple inputs
+      cin.sync();
+      cout << "Enter a name for player "<<  playerNum <<" (uppercase characters only)" << endl;
+      string playerName;
+      getline(cin, playerName);  //player 1 name input
+      if(checkName(playerName)==true){
+         Player* p = new Player(playerName, playerNum, &board);
+         for (int i = 0; i < HAND_SIZE; i++) {
+               p->addTileToHand(tileBag.popTile());
+         }
+         players.push_back(p);
+         playerAdded = true;
+      }
+      cout << endl;
    }
-   cout << endl;
 }
 
 
@@ -342,33 +362,37 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
    }
    if(tokens[0]=="place"){ //if first word is place
       string rows = "ABCDEFGHIJKLMNO";
-
-      if(tokens[2]!="at"){ // if second word isnt "at"
-         cout<<"Place command error at 'at' "<<endl;
-      }else{
-         if((rows.find(tokens[3].at(0)) != string::npos)){ //if the row coordinate is valid
-            if(tokens[3].size() == 2){ // if column number is single digit
-               if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
-                  placeTile(tokens, tilesPlaced, tilesPoints);
+      if (tokens.size() == 4){
+         if(tokens[2] !="at"){ // if second word isnt "at"
+            cout<<"Place command error at 'at' "<<endl;
+         }else{
+            if((rows.find(tokens[3].at(0)) != string::npos)){ //if the row coordinate is valid
+               if(tokens[3].size() == 2){ // if column number is single digit
+                  if(tokens[3].at(1) == '1' ||tokens[3].at(1) == '2' || tokens[3].at(1) == '3' ||tokens[3].at(1) == '4' ||tokens[3].at(1) == '5'|| tokens[3].at(1) == '6' ||tokens[3].at(1) == '7' ||tokens[3].at(1) == '8'|| tokens[3].at(1) == '9' ){
+                     placeTile(tokens, tilesPlaced, tilesPoints);
+                  }else{
+                  cout << "Place command error at grid coordinates" << endl;
+               }
+               }else if(tokens[3].size() == 3){// if column number is single digit
+                  if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
+                     placeTile(tokens, tilesPlaced, tilesPoints);
+                  }
                }else{
-               cout << "Place command error at grid coordinates" << endl;
-            }
-            }else if(tokens[3].size() == 3){// if column number is single digit
-               if((tokens[3].at(1) == '1') &(tokens[3].at(2) == '0' ||tokens[3].at(2) == '1'|| tokens[3].at(2) == '2' ||tokens[3].at(2) == '3' ||tokens[3].at(2) == '4'|| tokens[3].at(2) == '5')){
-                  placeTile(tokens, tilesPlaced, tilesPoints);
+                  cout << "Place command error at grid coordinates" << endl;
                }
             }else{
+               //validCommand = false;
                cout << "Place command error at grid coordinates" << endl;
             }
-         }else{
-            //validCommand = false;
-            cout << "Place command error at grid coordinates" << endl;
          }
+      }else{
+         cout<<" Place command error "<< endl;
       }
    }else if(tokens[0]=="replace"){ // if first word is replace
 
       if(players[currentPlayer]->hasTile(tokens[1].at(0))){//CHECK IF TILE IS IN HAND
-            players[currentPlayer]->replaceTile(tokens[0].at(0), tileBag.popTile());
+            //players[currentPlayer]->replaceTile(tokens[0].at(0), tileBag.popTile());
+            players[currentPlayer]->replaceTile(tokens[1].at(0), tileBag.popTile());
       }else{
          cout << "you don't have that tile" << std::endl;
       }
