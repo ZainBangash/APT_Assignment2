@@ -33,6 +33,7 @@ void TileBag::addTile(Tile* tile) {
 
 Tile* TileBag::popTile() {
     Tile* retTile = bag.get(0);
+    // deletes node
     bag.remove_front();
     return retTile;
 

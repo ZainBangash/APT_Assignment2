@@ -109,31 +109,35 @@ void Scrabble::playGame(){//scrabble
    set<Tile*> tilesPoints;//tiles for which points have been given
    while(true){
        // remove
-      cout << currentPlayer << endl;
       players[currentPlayer]->printHand();
       cout<<"Enter command: ";
       getline(cin, command);
       if(command.empty() == false){
          if (command == "pass"){ //switches currentPlayer
             if(currentPlayer == 0){
+                // renew player hand
+                for (uint i = 0; i < tilesPlaced.size(); i++) {
+                    //cout << "tilesLeft " << tileBag.tilesLeft();
+                    if (tileBag.tilesLeft() > 0) {
+                        players[currentPlayer]->addTileToHand(tileBag.popTile());
+                    }
+                }
+
                 currentPlayer = 1;
                 tilesPlaced.clear(); //empties vector
                 tilesPoints.clear();
-                // renew player hand
+
+            }else{
                 for (uint i = 0; i < tilesPlaced.size(); i++) {
+                    //cout << "tilesLeft " << tileBag.tilesLeft();
                     if (tileBag.tilesLeft() > 0) {
                         players[currentPlayer]->addTileToHand(tileBag.popTile());
                     }
                 }
-            }else{
+
                 currentPlayer = 0;
                 tilesPlaced.clear();
                 tilesPoints.clear();
-                for (uint i = 0; i < tilesPlaced.size(); i++) {
-                    if (tileBag.tilesLeft() > 0) {
-                        players[currentPlayer]->addTileToHand(tileBag.popTile());
-                    }
-                }
 
             }
          }else{
@@ -368,7 +372,7 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
    }else if(tokens[0]=="replace"){ // if first word is replace
 
       if(players[currentPlayer]->hasTile(tokens[1].at(0))){//CHECK IF TILE IS IN HAND
-            players[currentPlayer]->replaceTile(tokens[0].at(0), tileBag.popTile());
+            players[currentPlayer]->replaceTile(tokens[1].at(0), tileBag.popTile());
       }else{
          cout << "you don't have that tile" << std::endl;
       }

@@ -40,14 +40,14 @@ Tile* LinkedList::get(int index){
     return retTile;
 }
 
-void LinkedList::add_front(Tile* tile){
-    // fill new node
-	Node* node = new Node(tile, head);
 
-    // set it to the first node
-    head = node;
+void LinkedList::add_front(Tile* tile){
+    // fill new node at head
+    this->head = new Node(tile, this->head);
 
 }
+
+
 void LinkedList::add_back(Tile* tile){
     if(head == nullptr) {
         head = new Node(tile, nullptr);
@@ -129,7 +129,8 @@ void LinkedList::remove(int index){
 
             if(prev == nullptr){
                 // if there is only one node, remove it
-                head = nullptr;
+                // runs when the node to remove is the first node
+                head = head->next;
             }else{
                 // make the list skip over the removed node
                 prev->next = toRemove->next;

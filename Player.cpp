@@ -95,6 +95,7 @@ void Player::replaceTile(char letter, Tile* newTile) {
         if (tilePtr != nullptr && tilePtr->letter == letter) {
             tileIndex = i;
         }
+        //delete tilePtr;
     }
     if (tileIndex != -1) {
         //replace tile
@@ -103,7 +104,7 @@ void Player::replaceTile(char letter, Tile* newTile) {
     }
 
     // tile is out of the game
-    delete tilePtr;
+    //delete tilePtr;
 
 }
 
