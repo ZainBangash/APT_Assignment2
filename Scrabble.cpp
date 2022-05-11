@@ -219,7 +219,7 @@ void Scrabble::loadGame(string fileName){//checks if file exists
             }
          }else if(line > 6 && line < 22){
             std::string substring  = data.substr(4, 61);
-            for(std::__cxx11::basic_string<char>::size_type f = 0; f < substring.size(); f++){
+            for(uint f = 0; f < substring.size(); f++){
                if(row < BOARD_SIZE){
                   if(f%4 == 0){
                      if(substring.at(f)!=' '){
