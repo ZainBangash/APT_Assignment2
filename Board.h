@@ -26,6 +26,8 @@ public:
 
     void printBoard();
 
+    //bool isFul
+
 private:
     vector<vector<Tile*>> board;
 };
