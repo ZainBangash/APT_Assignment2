@@ -10,7 +10,6 @@ Scrabble::Scrabble(string tileFile) {
     tileBag.loadTiles(is);
     tileBag.shuffleTiles();
 
-    //cout << "HEREE" << tileBag.popTile()->value << endl;
 
     board = Board();
 
@@ -22,7 +21,6 @@ Scrabble::~Scrabble() {
 
 
 void Scrabble::run() {
-    //cout.flush();
     mainMenu();
 }
 
@@ -56,6 +54,7 @@ void Scrabble::mainMenu(){
             cout << endl;
             bool endGame = playGame();
             if(endGame == true){
+               result();
                cout << "Good Bye" << endl;
                break;
             }
@@ -65,7 +64,12 @@ void Scrabble::mainMenu(){
             cout << "Enter the filename from which load a game" << endl;
             string fileName;
             getline(cin >> std::ws, fileName);// name of file
-            loadGame(fileName);
+           // loadGame(fileName);
+            if(loadGame(fileName) == true){
+               result();
+               cout << "Good Bye" << endl;
+               break;
+            }
             cout << endl;
 
          }else if(menuSelection == "3"){ //prints name, id and email of group members
@@ -106,7 +110,23 @@ void Scrabble::mainMenu(){
    }
 }
 
+void Scrabble::result(){
+   cout<<endl;
+   cout<<players.at(0)->getName() << " has " << players.at(0)->getPoints() << " points"<<endl;
+   cout<<endl;
+   cout<<players.at(1)->getName() <<  " has " << players.at(1)->getPoints() << " points" << endl;
+   cout<<endl;
+   if(players.at(0)->getPoints() > players.at(1)->getPoints()){
+      cout<< players.at(0)->getName()<<" has won!" <<endl;
+   }else if(players.at(0)->getPoints() < players.at(1)->getPoints()){
+      cout<< players.at(1)->getName()<<" has won!" <<endl;
+   }else{
+      cout<< players.at(0)->getName()<<" and " << players.at(1)->getPoints() <<" have the same points \nGame drawn!\n" <<endl;
+   }
+}
+
 bool Scrabble::playGame(){//scrabble
+
    bool endGame = false;
    string command;
    board.printBoard();
@@ -118,18 +138,20 @@ bool Scrabble::playGame(){//scrabble
          players[currentPlayer]->printHand();
          cout<<"Enter command: ";
          getline(cin, command);
+         cout << endl;
          if(command.empty() == false){
             if (command == "pass"){ //switches currentPlayer
                if(currentPlayer == 0){
                   // renew player hand
-                  for (uint i = 0; i < tilesPlaced.size(); i++) {
-                     //cout << "tilesLeft " << tileBag.tilesLeft();
-                     if (tileBag.tilesLeft() > 0) {
-                           players[currentPlayer]->addTileToHand(tileBag.popTile());
-                     }else{
-                        endGame = true;
-                        break;
+                  if(tileBag.tilesLeft() != 0){
+                     for (uint i = 0; i < tilesPlaced.size(); i++) {
+                        if (tileBag.tilesLeft() > 0) {
+                              players[currentPlayer]->addTileToHand(tileBag.popTile());
+                        }
                      }
+                  }else{
+                     endGame = true;
+                     break;
                   }
 
                   currentPlayer = 1;
@@ -137,14 +159,18 @@ bool Scrabble::playGame(){//scrabble
                   tilesPoints.clear();
 
                }else{
-                  for (uint i = 0; i < tilesPlaced.size(); i++) {
-                     //cout << "tilesLeft " << tileBag.tilesLeft();
-                     if (tileBag.tilesLeft() > 0) {
-                           players[currentPlayer]->addTileToHand(tileBag.popTile());
-                     }else{
-                        endGame = true;
-                        break;
+                  if(tileBag.tilesLeft() != 0){
+                     for (uint i = 0; i < tilesPlaced.size(); i++) {
+                        if (tileBag.tilesLeft() > 0) {
+                              players[currentPlayer]->addTileToHand(tileBag.popTile());
+                        }else{
+                           endGame = true;
+                           break;
+                        }
                      }
+                  }else{
+                     endGame = true;
+                     break;
                   }
 
                   currentPlayer = 0;
@@ -209,7 +235,9 @@ void Scrabble::addPlayer(int playerNum){ //adds Player names
 }
 
 
-void Scrabble::loadGame(string fileName){//checks if file exists
+bool Scrabble::loadGame(string fileName){//checks if file exists
+   tileBag.~TileBag();
+
    board = Board();
    int row = 0;
    int col = 0;
@@ -247,7 +275,7 @@ void Scrabble::loadGame(string fileName){//checks if file exists
                   int value = (int) tokens[i].at(2);
                   players.at(1)->addTileToHand(new Tile(tokens[i].at(0), value - 48));
                }
-            }else{
+            }else if(line == 24){
                for(uint i = 0; i < tokens.size(); i ++){
                   int value = (int) tokens[i].at(2);
                   tileBag.addTile(new Tile(tokens[i].at(0), value - 48));
@@ -258,7 +286,6 @@ void Scrabble::loadGame(string fileName){//checks if file exists
             for(uint f = 0; f < substring.size(); f++){
                if(row < BOARD_SIZE){
                   if(f%4 == 0){
-                     //std::cout<<substring.at(f)<<std::endl;
                      if(substring.at(f)!=' '){
                         Tile* tile = new Tile(substring.at(f), 1);
                         board.setTile(col, row, tile);
@@ -276,15 +303,16 @@ void Scrabble::loadGame(string fileName){//checks if file exists
                currentPlayer = 1;
             }
          }
-        // cout << "The next line is " << data << endl;
          getline(myfile, data); // sets EOF flag if no value found
          line++;
 
       }
       myfile.close();
-      playGame();
+
+      return playGame();
    } else { //else file doesnt exist
       std::cout<<"File Doesn't Exist" << std::endl;
+      return false;
    }
 }
 
@@ -333,7 +361,6 @@ void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced,
           { // prints BINGO if user places 7 tiles
              cout << "BINGO!" << endl;
              players.at(currentPlayer)->addPoints( + 50);
-             cout << "Player: " << players.at(currentPlayer)->getName() << ", points: " << players.at(currentPlayer)->getPoints() << endl;
           }
        } else {
           tilesPlaced->pop_back(); // removes if validateTilePlacement fails
@@ -356,7 +383,6 @@ void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
             if((board.getTile(col+right, row) != nullptr)){
                players.at(currentPlayer)->addPoints(board.getTile(col+right, row)->value);
                right++;
-               cout<< "RIGHT Player: " << players.at(currentPlayer)->getName() << ", " << players.at(currentPlayer)->getPoints()<<endl;
             }
          }
       }
@@ -366,7 +392,6 @@ void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
             if(board.getTile(col-left, row) != nullptr ){
                players.at(currentPlayer)->addPoints(board.getTile(col-left, row)->value);
                left++;
-               cout<< "LEFT Player: " << players.at(currentPlayer)->getName() << ", " << players.at(currentPlayer)->getPoints() <<endl;
             }
          }
       }
@@ -376,7 +401,6 @@ void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
             if(board.getTile(col, row+below) != nullptr ){
                players.at(currentPlayer)->addPoints(board.getTile(col, row+below)->value);
                below++;
-               cout<< "BELOW Player: " << players.at(currentPlayer)->getName() << ", " << players.at(currentPlayer)->getPoints()<<endl;
             }
          }
       }
@@ -386,7 +410,6 @@ void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
             if(board.getTile(col, row-above) != nullptr){
                players.at(currentPlayer)->addPoints(board.getTile(col, row-above)->value);
                above++;
-               cout<< "ABOVE Player: " << players.at(currentPlayer)->getName() << ", " << players.at(currentPlayer)->getPoints()<<endl;
             }
          }
       }
@@ -439,7 +462,6 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
       }
    }else if(tokens[0]=="save"){ //saves game info in file
       for (uint i = 0; i < tilesPlaced->size() ; i++) {
-                     //cout << "tilesLeft " << tileBag.tilesLeft();
          if (tileBag.tilesLeft() > 0) {
             players[currentPlayer]->addTileToHand(tileBag.popTile());
          }else{

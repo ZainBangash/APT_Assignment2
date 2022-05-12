@@ -46,7 +46,8 @@ class Scrabble {
         bool playGame();
         void addPlayer(int playerNum);
         bool checkName(string name);
-        void loadGame(string fileName);
+        bool loadGame(string fileName);
+        void result();
 
 
         void checkCommand(string command, vector<PlacedTile>* tilesPlaced, set<Tile*>* tilesPoints, bool* savedGame);

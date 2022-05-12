@@ -5,7 +5,11 @@ TileBag::TileBag() {
     std::srand ( unsigned ( std::time(0) ) );
 };
 
-TileBag::~TileBag() {};
+TileBag::~TileBag() {
+    for(int i = 0; i<bag.size();i++){
+        bag.remove_front();
+    }
+};
 
 
 void TileBag::loadTiles(istream &strm) {
