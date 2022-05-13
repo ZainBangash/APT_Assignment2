@@ -121,7 +121,7 @@ void Scrabble::result(){
    }else if(players.at(0)->getPoints() < players.at(1)->getPoints()){
       cout<< players.at(1)->getName()<<" has won!" <<endl;
    }else{
-      cout<< players.at(0)->getName()<<" and " << players.at(1)->getPoints() <<" have the same points \nGame drawn!\n" <<endl;
+      cout<< players.at(0)->getName()<<" and " << players.at(1)->getName() <<" have the same points \nGame drawn!\n" <<endl;
    }
 }
 
@@ -252,13 +252,13 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
          if(line == 1 || line == 4){
             players.push_back(new Player(data, id, &board));
             ++id;
-         }else if(line == 2 || line == 5){
+         }else if(line == 2 || line == 5){ //load names
             if (line == 2){
-               players.at(0)->setPoints(stoi(data));
+               players.at(0)->setPoints(stoi(data)); //player 1
             }else{
-               players.at(1)->setPoints(stoi(data));
+               players.at(1)->setPoints(stoi(data)); //player 2
             }
-         }else if(line == 3 || line == 6 || line == 24){
+         }else if(line == 3 || line == 6 || line == 24){ // load hand and tile bag
                string inter;
                vector<string> tokens;
                stringstream check1(data);
@@ -266,18 +266,27 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
                   tokens.push_back(inter);
                }
             if(line == 3){
-               for(uint i = 0; i < tokens.size(); i ++){
+               for(uint i = 0; i < tokens.size(); i ++){ //player 1 hand
                   int value = (int) tokens[i].at(2);
+                  if(value == 1 && tokens[i].at(3) != ','){
+                     value = std::stoi(tokens[i].substr(2, 2));
+                  }
                   players.at(0)->addTileToHand(new Tile(tokens[i].at(0), value - 48));
                }
             }else if(line == 6){
-               for(uint i = 0; i<tokens.size(); i ++){
+               for(uint i = 0; i<tokens.size(); i ++){ //player 2 hand
                   int value = (int) tokens[i].at(2);
+                  if(value == 1 && tokens[i].at(3) != ','){
+                     value = std::stoi(tokens[i].substr(2, 2));
+                  }
                   players.at(1)->addTileToHand(new Tile(tokens[i].at(0), value - 48));
                }
             }else if(line == 24){
-               for(uint i = 0; i < tokens.size(); i ++){
+               for(uint i = 0; i < tokens.size(); i ++){ //tile bag
                   int value = (int) tokens[i].at(2);
+                  if(value == 1 && tokens[i].at(3) != ','){
+                     value = std::stoi(tokens[i].substr(2, 2));
+                  }
                   tileBag.addTile(new Tile(tokens[i].at(0), value - 48));
                }
             }
