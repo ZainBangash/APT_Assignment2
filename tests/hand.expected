@@ -1,9 +1,9 @@
 Welcome To Scrabble!
-------------------- 
+-------------------
 Menu
 ----
 1. New Game
-2. Load Game        
+2. Load Game
 3. Credits
 4. Quit
 1
@@ -39,8 +39,8 @@ Lets Play!
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-I-1 R-1 E-1 J-8 E-1 I-1 R-1
-Enter command: save TEST2
+O-1 E-1 G-2 E-1 A-1 N-1 E-1
+Enter command: save TEST1 
 
 
 Game saved successfully
@@ -56,7 +56,7 @@ Menu
 2
 
 Enter the filename from which load a game
-TEST2
+TEST1
      1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
   --------------------------------------------------------------
  A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -74,9 +74,30 @@ TEST2
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-I-1 R-1 E-1 J-8 E-1 I-1 R-1 I-1 R-1 E-1 J-8 E-1 I-1 R-1
-Enter command: place Done
+O-1 E-1 G-2 E-1 A-1 N-1 E-1 O-1 E-1 G-2 E-1 A-1 N-1 E-1
+Enter command: place J at A4 
+
+     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
+  --------------------------------------------------------------
+ A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ 
+TANIA has 0 points
+
+ZAIN has 0 points
 
 
- TANIA has 0 points
- ZAIN HAS 0 points
+Good Bye
