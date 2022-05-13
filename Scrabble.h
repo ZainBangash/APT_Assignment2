@@ -41,6 +41,7 @@ class Scrabble {
         vector<Player*> players;
         int currentPlayer;
         bool endGame;
+        bool passable;
 
         void mainMenu();
         bool playGame();

@@ -126,7 +126,7 @@ void Scrabble::result(){
 }
 
 bool Scrabble::playGame(){//scrabble
-
+   passable = true;
    bool endGame = false;
    string command;
    board.printBoard();
@@ -141,6 +141,7 @@ bool Scrabble::playGame(){//scrabble
          cout << endl;
          if(command.empty() == false){
             if (command == "place Done"){ //switches currentPlayer
+               passable = true;
                if(currentPlayer == 0){
                   // renew player hand
                   if(tileBag.tilesLeft() != 0){
@@ -182,11 +183,15 @@ bool Scrabble::playGame(){//scrabble
                   tilesPoints.clear();
 
                }
-            } else if (command == "pass") {
+            } else if (passable == true && command == "pass") {
                 if (currentPlayer == 0) {
                     currentPlayer = 1;
+                    tilesPlaced.clear(); //empties vector
+                    tilesPoints.clear();
                 } else {
                     currentPlayer = 0;
+                    tilesPlaced.clear(); //empties vector
+                    tilesPoints.clear();
                 }
             }else{
                bool savedGame = false;
@@ -195,12 +200,6 @@ bool Scrabble::playGame(){//scrabble
                   cout<<endl;
                   cout<<"Game saved successfully" << endl;
                   cout<<endl;
-                  // tileBag.~TileBag();
-                  // tilesPlaced.clear();
-                  // tilesPoints.cend();
-                  // board.~Board();
-                  // currentPlayer = 0;
-                  // savedGame = false;
                   break;
                }else{
                   board.printBoard(); //prints board
@@ -368,7 +367,6 @@ int Scrabble::letterToTileVal(char l) {
 }
 
 
-
 bool Scrabble::checkName(string name){ //validates names
     bool validName = true;
     for (std::__cxx11::basic_string<char>::size_type i = 0; i < name.size(); i++)
@@ -409,6 +407,7 @@ void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced,
           board.setTile(columnInt, rowInt, placeTile.tile);
           tilesPoints->insert(placeTile.tile);
           points(*tilesPoints, rowInt, columnInt, placeTile.tile);
+          passable = false;
           if (tilesPlaced->size() == 7)
           { // prints BINGO if user places 7 tiles
              cout << "BINGO!" << endl;
@@ -561,6 +560,10 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
          cout<<endl;
       }
 
+   }else if(tokens[0] == "pass"){
+      if(passable == false){
+         cout << "Must finish placing done tiles..... place Done command missing" << endl;
+      }
    }else{
       cout << "Invalid Command" << endl;
    }
