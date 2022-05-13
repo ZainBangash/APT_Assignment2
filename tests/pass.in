@@ -1,5 +1,5 @@
 2
-tests/TEST
+./tests/TEST
 place A at A1
 pass
 place I at B3

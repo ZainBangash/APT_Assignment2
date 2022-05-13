@@ -1,5 +1,8 @@
 1
 TANIA
 ZAIN
-save TEST1
-place J at A4
+place H at A1
+save TEST4
+2
+./tests/TEST4
+place O at A4

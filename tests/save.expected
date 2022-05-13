@@ -39,17 +39,32 @@ Lets Play!
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-J-8 E-1 A-1 M-3 Y-4 L-1 Q-10
-Enter command: save TEST
+D-2 I-1 N-1 O-1 G-2 O-1 N-1
+Enter command: place I at A6 
+
+     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
+  --------------------------------------------------------------
+ A |   |   |   |   |   | I |   |   |   |   |   |   |   |   |   |
+ B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+D-2 N-1 O-1 G-2 O-1 N-1
+Enter command: save TEST.SAVE
 
 
 Game saved successfully
+TANIA has 1 points
+ZAIN has 0 points
 
-Welcome To Scrabble!
--------------------
-Menu
-----
-1. New Game
-2. Load Game
-3. Credits
-4. Quit
+TANIA has won!

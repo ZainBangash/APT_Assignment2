@@ -6,23 +6,11 @@ Menu
 2. Load Game        
 3. Credits
 4. Quit
-1
+2
 
-Starting a New Game
-
-Enter a name for player 1 (uppercase characters only)
-TANIA
-
-Enter a name for player 2 (uppercase characters only)
-ZAIN
-
-
-Player 1: TANIA, 0
-Player 2: ZAIN, 0
-
-Lets Play!
-
-     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
+Enter the filename from which load a game
+TEST
+     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
   --------------------------------------------------------------
  A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -39,12 +27,12 @@ Lets Play!
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-A-1 X-8 I-1 C-3 H-4 R-1 I-1
-Enter command: place H at A1
+J-8 E-1 A-1 M-3 Y-4 L-1 Q-1
+Enter command: place J at A8
 
      1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
   --------------------------------------------------------------
- A | H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ A |   |   |   |   |   |   |   | J |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -59,27 +47,13 @@ Enter command: place H at A1
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-A-1 X-8 I-1 C-3 R-1 I-1
-Enter command: save TEST4
+E-1 A-1 M-3 Y-4 L-1 Q-1
+Enter command: place A at A8
 
-
-Game saved successfully
-
-Welcome To Scrabble!
--------------------
-Menu
-----
-1. New Game
-2. Load Game
-3. Credits
-4. Quit
-2
-
-Enter the filename from which load a game
-TEST4
-     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
+Can't place a tile on another tile
+     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
   --------------------------------------------------------------
- A | H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+ A |   |   |   |   |   |   |   | J |   |   |   |   |   |   |   |
  B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -94,31 +68,10 @@ TEST4
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-A-1 X-8 I-1 C-3 R-1 I-1 K-5 A-1 X-8 I-1 C-3 R-1 I-1 K-5
-Enter command: place O at A4
 
-     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
-  --------------------------------------------------------------
- A | H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
- 
-TANIA has 4 points
+TANIA has 8 points
 
 ZAIN has 0 points
- 
-TANIA has won!
 
+TANIA has won!
 Good Bye
