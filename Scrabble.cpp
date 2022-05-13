@@ -147,7 +147,11 @@ bool Scrabble::playGame(){//scrabble
                      for (uint i = 0; i < tilesPlaced.size(); i++) {
                         if (tileBag.tilesLeft() > 0) {
                               players[currentPlayer]->addTileToHand(tileBag.popTile());
+                        }else{
+                           endGame = true;
+                           break;
                         }
+
                      }
                   }else{
                      endGame = true;
@@ -204,7 +208,7 @@ bool Scrabble::playGame(){//scrabble
       else{
          endGame = true;
          break;
-         
+
       }
    }
    return endGame;
@@ -223,6 +227,7 @@ void Scrabble::addPlayer(int playerNum){ //adds Player names
       string playerName;
       getline(cin, playerName);  //player 1 name input
       if(checkName(playerName)==true){
+          // add initial tiles
          Player* p = new Player(playerName, playerNum, &board);
          for (int i = 0; i < HAND_SIZE; i++) {
                p->addTileToHand(tileBag.popTile());
@@ -506,7 +511,7 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
                }
                fileToOverWrite << "\n";
             }
-            
+
             fileToOverWrite << tileBag.saveBag() << "\n";
             fileToOverWrite << players.at(currentPlayer)->getName();
             fileToOverWrite.close();
