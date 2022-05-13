@@ -49,6 +49,8 @@ class Scrabble {
         bool loadGame(string fileName);
         void result();
 
+        int letterToTileVal(char l);
+
 
         void checkCommand(string command, vector<PlacedTile>* tilesPlaced, set<Tile*>* tilesPoints, bool* savedGame);
 

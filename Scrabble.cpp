@@ -292,7 +292,7 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
                if(row < BOARD_SIZE){
                   if(f%4 == 0){
                      if(substring.at(f)!=' '){
-                        Tile* tile = new Tile(substring.at(f), 1);
+                        Tile* tile = new Tile(substring.at(f), letterToTileVal(substring.at(f)));
                         board.setTile(col, row, tile);
                      }
                      col++;
@@ -320,6 +320,28 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
       return false;
    }
 }
+
+
+int Scrabble::letterToTileVal(char l) {
+    int val = 0;
+    if (l == 'A' || l == 'E' || l == 'I' || l == 'O' || l == 'U' || l == 'L' || l == 'N' || l == 'S' || l == 'T' || l == 'R') {
+        val = 1;
+    } else if (l == 'D' || l == 'G') {
+        val = 2;
+    } else if (l == 'B' || l == 'C'|| l == 'M' || l == 'P' ) {
+        val = 3;
+    } else if (l == 'F' || l == 'H'|| l == 'V' || l == 'W' || l == 'Y' ) {
+        val = 4;
+    } else if (l == 'K') {
+        val = 5;
+    } else if (l == 'J' || l == 'X') {
+        val = 8;
+    } else if (l == 'Q' || l == 'Z') {
+        val = 10;
+    }
+    return val;
+}
+
 
 
 bool Scrabble::checkName(string name){ //validates names
