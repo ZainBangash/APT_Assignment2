@@ -1,9 +1,9 @@
 Welcome To Scrabble!
-------------------- 
+----------------------
 Menu
 ----
 1. New Game
-2. Load Game        
+2. Load Game
 3. Credits
 4. Quit
 2
@@ -27,7 +27,7 @@ TEST
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-J-8 E-1 A-1 M-3 Y-4 L-1 Q-1
+J-8 E-1 A-1 M-3 Y-4 L-1 Q-1 
 Enter command: place J at A3
 
      1   2   3   4   5   6   7   8   9   10  11  12  13  14  15 
@@ -47,5 +47,5 @@ Enter command: place J at A3
  M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
  O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-E-1 A-1 M-3 Y-4 L-1 Q-1
+E-1 A-1 M-3 Y-4 L-1 Q-1 
 Enter command:
