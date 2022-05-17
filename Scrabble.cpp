@@ -19,11 +19,9 @@ Scrabble::Scrabble(string tileFile) {
 Scrabble::~Scrabble() {
 }
 
-
 void Scrabble::run() {
     mainMenu();
 }
-
 
 void Scrabble::mainMenu(){
    string menuSelection = "";
@@ -126,6 +124,8 @@ void Scrabble::result(){
 }
 
 bool Scrabble::playGame(){//scrabble
+   bool playerOnePassed = false;
+   bool playerTwoPassed = false;
    passable = true;
    bool endGame = false;
    string command;
@@ -135,6 +135,8 @@ bool Scrabble::playGame(){//scrabble
    while(true){
        // remove
       if(!cin.eof()){
+         std::cout<<std::endl;
+         std::cout << "Your hand is" << std::endl;
          players[currentPlayer]->printHand();
          cout<<"Enter command: ";
          getline(cin, command);
@@ -143,56 +145,73 @@ bool Scrabble::playGame(){//scrabble
             if (command == "place Done"){ //switches currentPlayer
                passable = true;
                if(currentPlayer == 0){
+                  playerOnePassed = false;
                   // renew player hand
                   if(tileBag.tilesLeft() != 0){
                      for (uint i = 0; i < tilesPlaced.size(); i++) {
                         if (tileBag.tilesLeft() > 0) {
                               players[currentPlayer]->addTileToHand(tileBag.popTile());
-                        }else{
-                           endGame = true;
-                           break;
                         }
 
                      }
                   }else{
-                     endGame = true;
-                     break;
+                     if(players.at(currentPlayer)->isHandEmpty() == true){
+                        endGame = true;
+                        break;
+                     }
                   }
 
                   currentPlayer = 1;
+                  std::cout << players.at(currentPlayer)->getName() << ", it's your turn" << std::endl;
+                  std::cout <<  "Score for " << players.at(0)->getName() << ": " << players.at(0)->getPoints() << std::endl;
+                  std::cout <<  "Score for " << players.at(1)->getName() << ": " << players.at(1)->getPoints() << std::endl;
+                  
                   tilesPlaced.clear(); //empties vector
                   tilesPoints.clear();
 
+
                }else{
+                  playerTwoPassed = false;
                   if(tileBag.tilesLeft() != 0){
                      for (uint i = 0; i < tilesPlaced.size(); i++) {
                         if (tileBag.tilesLeft() > 0) {
                               players[currentPlayer]->addTileToHand(tileBag.popTile());
-                        }else{
-                           endGame = true;
-                           break;
                         }
+                        
                      }
                   }else{
-                     endGame = true;
-                     break;
+                     if(players.at(currentPlayer)->isHandEmpty() == true){
+                        endGame = true;
+                        break;
+                     }
                   }
 
                   currentPlayer = 0;
+                  std::cout << players.at(currentPlayer)->getName() << ", it's your turn" << std::endl;
+                  std::cout <<  "Score for " << players.at(0)->getName() << ": " << players.at(0)->getPoints() << std::endl;
+                  std::cout <<  "Score for " << players.at(1)->getName() << ": " << players.at(1)->getPoints() << std::endl;
                   tilesPlaced.clear();
                   tilesPoints.clear();
 
                }
             } else if (passable == true && command == "pass") {
-                if (currentPlayer == 0) {
+                if(tileBag.tilesLeft() == 0 && (playerOnePassed == true || playerTwoPassed == true )){
+                   endGame = true;
+                   break;
+                }else{
+                   if (currentPlayer == 0) {
+                    playerOnePassed = true;
                     currentPlayer = 1;
                     tilesPlaced.clear(); //empties vector
                     tilesPoints.clear();
-                } else {
+                  } else {
+                    playerOnePassed = true;
                     currentPlayer = 0;
                     tilesPlaced.clear(); //empties vector
                     tilesPoints.clear();
+                  }
                 }
+                
             }else{
                bool savedGame = false;
                checkCommand(command, &tilesPlaced, &tilesPoints, &savedGame); //validates command and acts accordingly
@@ -244,7 +263,6 @@ void Scrabble::addPlayer(int playerNum){ //adds Player names
    }
 }
 
-
 bool Scrabble::loadGame(string fileName){//checks if file exists
    tileBag.~TileBag();
 
@@ -281,7 +299,6 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
                   if(tokens[i].size() == 4){
                      if(value == 1 && tokens[i].at(3) != ','){
                         value = std::stoi(tokens[i].substr(2, 2));
-                        std::cout<<value<<std::endl;
                      }
                   }
                   players.at(0)->addTileToHand(new Tile(tokens[i].at(0), value));
@@ -293,7 +310,6 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
                   if(tokens[i].size() == 4){
                      if(value == 1 && tokens[i].at(3) != ','){
                         value = std::stoi(tokens[i].substr(2, 2));
-                        std::cout<<value<<std::endl;
                      }
                   }
                   players.at(1)->addTileToHand(new Tile(tokens[i].at(0), value));
@@ -304,7 +320,6 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
                   if(tokens[i].size() == 4){
                      if(value == 1 && tokens[i].at(3) != ','){
                         value = std::stoi(tokens[i].substr(2, 2));
-                        std::cout<<value<<std::endl;
                      }
                   }
                   tileBag.addTile(new Tile(tokens[i].at(0), value));
@@ -345,7 +360,6 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
    }
 }
 
-
 int Scrabble::letterToTileVal(char l) {
     int val = 0;
     if (l == 'A' || l == 'E' || l == 'I' || l == 'O' || l == 'U' || l == 'L' || l == 'N' || l == 'S' || l == 'T' || l == 'R') {
@@ -365,7 +379,6 @@ int Scrabble::letterToTileVal(char l) {
     }
     return val;
 }
-
 
 bool Scrabble::checkName(string name){ //validates names
     bool validName = true;
@@ -419,7 +432,6 @@ void Scrabble::placeTile(vector<string> tokens, vector<PlacedTile>* tilesPlaced,
     }
 }
 
-
 void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
    //check tiles to the right, lefy, above and below
    players.at(currentPlayer)->addPoints(tile->value);
@@ -466,7 +478,6 @@ void Scrabble::points(set<Tile*> tilesPoints, int row, int col, Tile* tile){
       }
    }
 }
-
 
 void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set<Tile*>* tilesPoints, bool* savedGame){ //validates command
    //bool validCommand = true;
@@ -569,8 +580,6 @@ void Scrabble::checkCommand(string command, vector<PlacedTile>* tilesPlaced, set
    }
 
 }
-
-
 
 bool Scrabble::validateTilePlacement(vector<PlacedTile> tilesPlaced) {
     bool valid = true;

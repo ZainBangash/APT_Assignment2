@@ -86,6 +86,14 @@ void Player::removeTile(char tileLetter) {
 
 }
 
+bool Player::isHandEmpty(){
+    if(hand.size() > 0){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 
 void Player::replaceTile(char letter, Tile* newTile) {
     int tileIndex = -1;

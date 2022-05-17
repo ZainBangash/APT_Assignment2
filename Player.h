@@ -29,6 +29,7 @@ class Player {
         
         void printHand();
         string saveHand();
+        bool isHandEmpty();
         
         int getID();
         int getPoints();
