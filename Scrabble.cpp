@@ -271,7 +271,7 @@ bool Scrabble::loadGame(string fileName){//checks if file exists
    int col = 0;
    string data;
    ifstream myfile;
-   myfile.open(fileName); //opens file
+   myfile.open("tests/"+fileName); //opens file
    int line = 1;
    int id = 0;
    if(myfile) { //if return true file exists
